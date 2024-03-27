@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Core/Types.h"
 #include "SG_Pawn.generated.h"
+
+class UCameraComponent;
 
 UCLASS()
 class SNAKEGAME_API ASG_Pawn : public APawn
@@ -14,10 +17,19 @@ class SNAKEGAME_API ASG_Pawn : public APawn
 public:
 	ASG_Pawn();
 
-public:
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void UpdateLocation(const Snake::Dim& Dim, int32 CellSize, const FTransform& GridOrigin);
 
 protected:
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere)
+	USceneComponent* Origin;
+
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* Camera;
+
+private:
+	Snake::Dim Dim;
+	int32 CellSize;
+	FTransform GridOrigin;
+
+	void OnViewportResized(FViewport* Viewport, uint32 Val);
 };

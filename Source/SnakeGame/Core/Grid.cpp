@@ -36,7 +36,7 @@ void Grid::printDebug()
 		FString line;
 		for (int32 x = 0; x < c_dim.widht; ++x)
 		{
-			TCHAR symbol;
+			TCHAR symbol{};
 			switch (m_cells[posToIndex(x, y)])
 			{
 				case CellType::Empaty: symbol = '0'; break;

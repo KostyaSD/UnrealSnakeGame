@@ -23,7 +23,7 @@ enum class CellType
 
 struct Settings
 {
-	Dim gridSize;
+	Dim gridDims;
 };
 
 }  // namespace Snake
