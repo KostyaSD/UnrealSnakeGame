@@ -1,7 +1,7 @@
 // Snake Game, Copyright GamesWID. All Rights Reserved.
 
-#include "SnakeGame/Core/Game.h"
-#include "SnakeGame/Core/Grid.h"
+#include "Core/Game.h"
+#include "Core/Grid.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGame, All, All);
 

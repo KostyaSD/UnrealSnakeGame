@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "SnakeGame/Core/Game.h"
+#include "Core/Game.h"
 #include "SG_GameMode.generated.h"
 
 UCLASS()

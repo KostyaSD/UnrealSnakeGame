@@ -2,7 +2,7 @@
 
 #include "GameMode/SG_GameMode.h"
 #include "SG_GameMode.h"
-#include "SnakeGame/Core/Types.h"
+#include "Core/Types.h"
 
 void ASG_GameMode::StartPlay()
 {
