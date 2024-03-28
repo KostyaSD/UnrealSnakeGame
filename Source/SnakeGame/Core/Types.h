@@ -9,8 +9,8 @@ namespace Snake
 
 struct Dim
 {
-	int32 widht;
-	int32 height;
+	uint32 widht;
+	uint32 height;
 };
 
 enum class CellType
