@@ -5,7 +5,8 @@
 #include "CoreMinimal.h"
 #include "Types.h"
 
-namespace Snake
+
+namespace SnakeGame
 {
 
 class Grid
@@ -16,6 +17,7 @@ public:
 	Dim dim() const { return c_dim; }
 
 private:
+
 	const Dim c_dim;
 	TArray<CellType> m_cells;
 

@@ -5,6 +5,7 @@
 #include "Core/Types.h"
 #include "Core/Grid.h"
 #include "World/SG_Grid.h"
+#include "World/SG_WorldTypes.h"
 #include "Characters/SG_Pawn.h"
 
 void ASG_GameMode::StartPlay()
@@ -12,8 +13,8 @@ void ASG_GameMode::StartPlay()
 	Super::StartPlay();
 
 	// init core game
-	const Snake::Settings GS{GridDims.X, GridDims.Y};
-	Game = MakeUnique<Snake::Game>(GS);
+	const SnakeGame::Settings GS{GridDims.X, GridDims.Y};
+	Game = MakeUnique<SnakeGame::Game>(GS);
 	check(Game.IsValid());
 
 	// init world grid
@@ -32,4 +33,24 @@ void ASG_GameMode::StartPlay()
 	check(Pawn);
 	check(Game->grid().IsValid());
 	Pawn->UpdateLocation(Game->grid()->dim(), CellSize, GridOrigin);
+
+	check(ColorsTable);
+	const auto RowsCount = ColorsTable->GetRowNames().Num();
+	check(RowsCount >= 1);
+
+	ColorTableIndex = FMath::RandRange(0, RowsCount - 1);
+	UpdateColors();
+}
+
+void ASG_GameMode::UpdateColors() 
+{
+	const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
+	const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
+	if (ColorSet)
+	{
+		GridVisual->UpdateColors(*ColorSet);
+		//SnakeVisual->UpdateColors(*ColorSet);
+		//FoodVisual->UpdateColor(ColorSet->FoodColor);
+
+	}
 }

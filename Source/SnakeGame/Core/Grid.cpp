@@ -4,12 +4,12 @@
 
 DEFINE_LOG_CATEGORY_STATIC(LogGrid, All, All);
 
-using namespace Snake;
+using namespace SnakeGame;
 
 Grid::Grid(const Dim& dim)	//
-	: c_dim(Dim{dim.widht + 2, dim.height + 2})
+	: c_dim(Dim{dim.width + 2, dim.height + 2})
 {
-	m_cells.Init(CellType::Empaty, c_dim.widht * c_dim.height);
+	m_cells.Init(CellType::Empaty, c_dim.width * c_dim.height);
 	initWalls();
 	printDebug();
 }
@@ -18,9 +18,9 @@ void Grid::initWalls()
 {
 	for (uint32 y = 0; y < c_dim.height; ++y)
 	{
-		for (uint32 x = 0; x < c_dim.widht; ++x)
+		for (uint32 x = 0; x < c_dim.width; ++x)
 		{
-			if (x == 0 || x == c_dim.widht - 1 || y == 0 || y == c_dim.height - 1)
+			if (x == 0 || x == c_dim.width - 1 || y == 0 || y == c_dim.height - 1)
 			{
 				m_cells[posToIndex(x, y)] = CellType::Wall;
 			}
@@ -34,7 +34,7 @@ void Grid::printDebug()
 	for (uint32 y = 0; y < c_dim.height; ++y)
 	{
 		FString line;
-		for (uint32 x = 0; x < c_dim.widht; ++x)
+		for (uint32 x = 0; x < c_dim.width; ++x)
 		{
 			TCHAR symbol{};
 			switch (m_cells[posToIndex(x, y)])
@@ -51,5 +51,5 @@ void Grid::printDebug()
 
 uint32 Grid::posToIndex(uint32 x, uint32 y) const
 {
-	return x + y * c_dim.widht;
+	return x + y * c_dim.width;
 }

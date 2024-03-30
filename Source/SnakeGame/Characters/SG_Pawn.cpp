@@ -15,11 +15,14 @@ double VerticalFOV(double HorFOVDegrees, double ViewportAspectHW)
 	return FMath::RadiansToDegrees(2.0 * FMath::Atan(FMath::Tan(FMath::DegreesToRadians(HorFOVDegrees) * 0.5) * ViewportAspectHW));
 }
 
+constexpr double GridMargin = 2.0;
+
 }  // namespace
 
 ASG_Pawn::ASG_Pawn()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
 	Origin = CreateDefaultSubobject<USceneComponent>("Origin");
 	check(Origin);
 	SetRootComponent(Origin);
@@ -29,7 +32,7 @@ ASG_Pawn::ASG_Pawn()
 	Camera->SetupAttachment(Origin);
 }
 
-void ASG_Pawn::UpdateLocation(const Snake::Dim& InDim, uint32 InCellSize, const FTransform& InGridOrigin)
+void ASG_Pawn::UpdateLocation(const SnakeGame::Dim& InDim, uint32 InCellSize, const FTransform& InGridOrigin)
 {
 	Dim = InDim;
 	CellSize = InCellSize;
@@ -40,7 +43,8 @@ void ASG_Pawn::UpdateLocation(const Snake::Dim& InDim, uint32 InCellSize, const 
 	check(GEngine->GameViewport->Viewport);
 
 	auto* Viewport = GEngine->GameViewport->Viewport;
-	Viewport->ViewportResizedEvent.AddUObject(this, &ASG_Pawn::OnViewportResized);
+	Viewport->ViewportResizedEvent.Remove(ResizeHandle);
+	ResizeHandle = Viewport->ViewportResizedEvent.AddUObject(this, &ASG_Pawn::OnViewportResized);
 
 #if WITH_EDITOR
 	OnViewportResized(Viewport, 0);
@@ -51,23 +55,24 @@ void ASG_Pawn::OnViewportResized(FViewport* Viewport, uint32 Val)
 {
 	if (!Viewport || Viewport->GetSizeXY().Y == 0 || Dim.height == 0) return;
 
-	const double WorldWidth = Dim.widht * CellSize;
+	const double WorldWidth = Dim.width * CellSize;
 	const double WorldHeight = Dim.height * CellSize;
 
 	double LocationZ = 0.0;
-
 	const double ViewportAspect = static_cast<double>(Viewport->GetSizeXY().X) / Viewport->GetSizeXY().Y;
-	const double GridAspect = static_cast<double>(Dim.widht) / Dim.height;
+	const double GridAspect = static_cast<double>(Dim.width) / Dim.height;
 
 	if (ViewportAspect <= GridAspect)
 	{
-		LocationZ = WorldWidth / FOVTan(Camera->FieldOfView);
+		const double MarginWidth = (Dim.width + GridMargin) * CellSize;
+		LocationZ = MarginWidth / FOVTan(Camera->FieldOfView);
 	}
 	else
 	{
 		check(ViewportAspect);
 		const double VFOV = VerticalFOV(Camera->FieldOfView, 1.0 / ViewportAspect);
-		LocationZ = WorldHeight / FOVTan(VFOV);
+		const double MarginHeight = (Dim.height + GridMargin) * CellSize;
+		LocationZ = MarginHeight / FOVTan(VFOV);
 	}
 
 	const FVector NewPawnLocation = GridOrigin.GetLocation() + 0.5 * FVector(WorldHeight, WorldWidth, LocationZ);

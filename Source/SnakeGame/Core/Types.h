@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 
-namespace Snake
+namespace SnakeGame
 {
 
 struct Dim
 {
-	uint32 widht;
+	uint32 width;
 	uint32 height;
 };
 
