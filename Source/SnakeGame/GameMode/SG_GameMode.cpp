@@ -8,12 +8,22 @@
 #include "World/SG_WorldTypes.h"
 #include "Characters/SG_Pawn.h"
 
+ASG_GameMode::ASG_GameMode()
+{
+	PrimaryActorTick.bCanEverTick= true;
+}
+
 void ASG_GameMode::StartPlay()
 {
 	Super::StartPlay();
 
 	// init core game
-	const SnakeGame::Settings GS{GridDims.X, GridDims.Y};
+	SnakeGame::Settings GS;
+	GS.gridDims = SnakeGame::Dim{GridDims.X, GridDims.Y};
+	GS.gameSpeed = GameSpeed;
+	GS.snake.defaultSize = SnakeDefaultsSize;
+	GS.snake.startPosition = SnakeGame::Position{GridDims.X / 2, GridDims.Y / 2};
+
 	Game = MakeUnique<SnakeGame::Game>(GS);
 	check(Game.IsValid());
 
@@ -42,15 +52,24 @@ void ASG_GameMode::StartPlay()
 	UpdateColors();
 }
 
-void ASG_GameMode::UpdateColors() 
+void ASG_GameMode::UpdateColors()
 {
 	const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
 	const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
 	if (ColorSet)
 	{
 		GridVisual->UpdateColors(*ColorSet);
-		//SnakeVisual->UpdateColors(*ColorSet);
-		//FoodVisual->UpdateColor(ColorSet->FoodColor);
+		// SnakeVisual->UpdateColors(*ColorSet);
+		// FoodVisual->UpdateColor(ColorSet->FoodColor);
+	}
+}
 
+void ASG_GameMode::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (Game.IsValid())
+	{
+		Game->update(DeltaSeconds, SnakeInput);
 	}
 }
