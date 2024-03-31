@@ -32,7 +32,7 @@ struct SNAKEGAME_API Position
 	// FORCEINLINE bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
 	// FORCEINLINE bool IsEqual(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
 
-	// static const Position Zero;
+	static const Position Zero;
 };
 
 struct SNAKEGAME_API Input
@@ -62,7 +62,7 @@ struct Settings
 	struct Snake
 	{
 		uint32 defaultSize{4};
-		Position startPosition{0, 0};
+		Position startPosition{Position::Zero};
 	} snake;
 	float gameSpeed{1.0f};
 };

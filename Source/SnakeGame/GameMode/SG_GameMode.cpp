@@ -109,7 +109,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		check(Game.IsValid());
 		GridVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
-		SnakeInput = SnakeGame::Input{1, 0};
+		SnakeInput = SnakeGame::Input::Default;
 	}
 }
 
@@ -129,6 +129,6 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
 	GS.gridDims = SnakeGame::Dim{GridDims.X, GridDims.Y};
 	GS.gameSpeed = GameSpeed;
 	GS.snake.defaultSize = SnakeDefaultsSize;
-	GS.snake.startPosition = SnakeGame::Position{GridDims.X / 2 + 1, GridDims.Y / 2 + 1};
+	GS.snake.startPosition = SnakeGame::Grid::center(GridDims.X, GridDims.Y);
 	return GS;
 }

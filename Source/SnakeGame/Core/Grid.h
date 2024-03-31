@@ -18,6 +18,7 @@ public:
 	void update(const TPositionPtr* links, CellType cellType);
 	bool hitTest(const Position& position, CellType cellType) const;
 	// void update(const Position& position, CellType cellType);
+	static Position center(uint32 width, uint32 height) { return Position(width / 2 + 1, height / 2 + 1); }
 
 private:
 	const Dim c_dim;
