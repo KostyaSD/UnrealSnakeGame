@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Types.h"
 
-
 namespace SnakeGame
 {
 
@@ -18,12 +17,15 @@ public:
 	void printDebug();
 	void update(const TPositionPtr* links, CellType cellType);
 	bool hitTest(const Position& position, CellType cellType) const;
-	//void update(const Position& position, CellType cellType);
+	// void update(const Position& position, CellType cellType);
 
 private:
-
 	const Dim c_dim;
 	TArray<CellType> m_cells;
+	TMap<CellType, TArray<uint32>> m_indByType = {
+		{CellType::Snake, {}},	//
+		{CellType::Wall, {}},	//
+	};
 
 	void initWalls();
 

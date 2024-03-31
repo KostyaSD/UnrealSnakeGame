@@ -19,16 +19,14 @@ Snake::Snake(const Settings::Snake& settings)
 void Snake::move(const Input& input)
 {
 
-	m_links.RemoveNode(m_links.GetTail());
-	m_links.InsertNode(m_links.GetHead()->GetValue(), m_links.GetHead()->GetNextNode());
-	m_links.GetHead()->GetValue() += Position(input.x, input.y);
 	// can't move opposite direction
-	//if (!m_lastInput.opposite(input))
-	//{
-	//	m_lastInput = input;
-	//}
+	if (!m_lastInput.opposite(input))
+	{
+		m_lastInput = input;
+	}
+	m_links.MoveTail(m_links.GetTail(), m_links.GetHead(), m_links.GetHead()->GetValue());
+	m_links.GetHead()->GetValue() += Position(m_lastInput.x, m_lastInput.y);
 
-	//m_links.GetTail()->GetValue() = m_links.GetHead()->GetValue();
-	//m_links.MoveTailAfterHead();
-	//m_links.GetHead()->GetValue() += Position(m_lastInput.x, m_lastInput.y);
+	// m_links.GetTail()->GetValue() = m_links.GetHead()->GetValue();
+	// m_links.MoveTailAfterHead();
 }

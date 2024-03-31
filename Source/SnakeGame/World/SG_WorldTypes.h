@@ -19,13 +19,13 @@ struct FSnakeColors : public FTableRowBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor GridLineColor{FLinearColor::White};
-	/*
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor SnakeHeadColor{FLinearColor::White};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor SnakeLinkColor{FLinearColor::Green};
-
+	/*
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor FoodColor{FLinearColor::Red};*/
 };

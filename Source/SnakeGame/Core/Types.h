@@ -17,7 +17,7 @@ struct Dim
 struct SNAKEGAME_API Position
 {
 	Position(uint32 inX, uint32 inY) : x(inX), y(inY) {}
-	//Position() = default;
+	// Position() = default;
 
 	uint32 x{0};
 	uint32 y{0};
@@ -29,10 +29,10 @@ struct SNAKEGAME_API Position
 		return *this;
 	}
 
-	//FORCEINLINE bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
-	//FORCEINLINE bool IsEqual(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
+	// FORCEINLINE bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
+	// FORCEINLINE bool IsEqual(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
 
-	//static const Position Zero;
+	// static const Position Zero;
 };
 
 struct SNAKEGAME_API Input
@@ -40,20 +40,20 @@ struct SNAKEGAME_API Input
 	int8 x; /* possible values: (-1, 0, 1) */
 	int8 y; /* possible values: (-1, 0, 1) */
 
-	//FORCEINLINE bool opposite(const Input& rhs) const  //
-	//{
-	//	return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0);
-	//}
+	FORCEINLINE bool opposite(const Input& rhs) const  //
+	{
+		return (x == -rhs.x && x != 0) || (y == -rhs.y && y != 0);
+	}
 
-	//static const Input Default;
+	static const Input Default;
 };
 
 enum class CellType
 {
-	Empaty = 0,
+	Empty = 0,
 	Wall,
 	Snake
-	//Food
+	// Food
 };
 
 struct Settings
@@ -67,7 +67,15 @@ struct Settings
 	float gameSpeed{1.0f};
 };
 
-using TSnakeList = TDoubleLinkedList<Position>;
-using TPositionPtr = TSnakeList::TDoubleLinkedListNode;
+using TPositionPtr = TDoubleLinkedList<Position>::TDoubleLinkedListNode;
+class TSnakeList : public TDoubleLinkedList<Position>
+{
+public:
+	void MoveTail(TPositionPtr* Tail, TPositionPtr* Head, const Position& Pos)
+	{
+		RemoveNode(Tail);
+		InsertNode(Pos, Head->GetNextNode());
+	}
+};
 
 }  // namespace SnakeGame
