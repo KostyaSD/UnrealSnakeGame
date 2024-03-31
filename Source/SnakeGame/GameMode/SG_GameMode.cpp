@@ -6,6 +6,7 @@
 #include "SnakeGame/Core/Grid.h"
 #include "World/SG_Grid.h"
 #include "World/SG_Snake.h"
+#include "World/SG_Food.h"
 #include "World/SG_WorldTypes.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -37,6 +38,13 @@ void ASG_GameMode::StartPlay()
 	SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 	SnakeVisual->FinishSpawning(GridOrigin);
 
+	// init world Food
+	FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
+	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
+	FoodVisual->FinishSpawning(GridOrigin);
+
+
+
 	// set pawn location fitting grid in viewport
 	auto* PC = GetWorld()->GetFirstPlayerController();
 	check(PC);
@@ -64,7 +72,7 @@ void ASG_GameMode::UpdateColors()
 	{
 		GridVisual->UpdateColors(*ColorSet);
 		SnakeVisual->UpdateColors(*ColorSet);
-		// FoodVisual->UpdateColor(ColorSet->FoodColor);
+		FoodVisual->UpdateColor(ColorSet->FoodColor);
 	}
 }
 
@@ -109,6 +117,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		check(Game.IsValid());
 		GridVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
+		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 		SnakeInput = SnakeGame::Input::Default;
 	}
 }

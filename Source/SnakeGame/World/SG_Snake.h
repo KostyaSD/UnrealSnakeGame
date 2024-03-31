@@ -25,8 +25,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 protected:
-	virtual void BeginPlay() override;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	TSubclassOf<ASG_SnakeLink> SnakeHeadClass;
 
@@ -37,6 +35,7 @@ private:
 	TWeakPtr<SnakeGame::Snake> Snake;
 	uint32 CellSize;
 	SnakeGame::Dim Dims;
+	FLinearColor SnakeLinkColor;
 
 	UPROPERTY()
 	TArray<ASG_SnakeLink*> SnakeLinks;

@@ -11,7 +11,12 @@ using namespace SnakeGame;
 
 Game::Game(const Settings& settings) : c_settings(settings)
 {
+
 	m_grid = MakeShared<Grid>(settings.gridDims);
+
+	checkf(m_grid->dim().width / 2 >= settings.snake.defaultSize, TEXT("Snake initial lenght [%i] doesn't fit grid width [%i]"),
+		settings.snake.defaultSize, m_grid->dim().width);
+
 	m_snake = MakeShared<Snake>(settings.snake);
 	m_food = MakeShared<Food>();
 	updateGrid();
@@ -21,45 +26,27 @@ Game::Game(const Settings& settings) : c_settings(settings)
 void Game::update(float deltaSeconds, const Input& input)
 {
 	if (m_gameOver || !updateTime(deltaSeconds)) return;
-	move(input);
+	m_snake->move(input);
 
 	if (died())
 	{
 		m_gameOver = true;
+		return;
 	}
 
-	// if (m_gameOver || !updateTime(deltaSeconds)) return;
+	if (foodTaken())
+	{
+		++m_score;
+		m_snake->increase();
+		generateFood();
+	}
 
-	// const auto prevTailPosition = m_snake->tail();
-	// m_snake->move(input);
-
-	// if (died(prevTailPosition))
-	//{
-	//	m_gameOver = true;
-	//	dispatchEvent(GameplayEvent::GameOver);
-	//	return;
-	// }
-
-	// if (foodTaken())
-	//{
-	//	++m_score;
-	//	m_snake->increase();
-	//	dispatchEvent(GameplayEvent::FoodTaken);
-	//	generateFood();
-	// }
-
-	// updateGrid();
-}
-
-void Game::move(const Input& input)
-{
-	m_snake->move(input);
 	updateGrid();
 }
 
 void Game::updateGrid()
 {
-	m_grid->update(m_snake->body(), CellType::Snake);
+	m_grid->update(m_snake->links().GetHead(), CellType::Snake);
 	m_grid->printDebug();
 }
 
@@ -79,6 +66,22 @@ bool Game::died() const
 
 void Game::generateFood()
 {
-	m_food->setPosition(m_grid->randomEmptyPosition());
-	m_grid->update(m_food->position(), CellType::Food);
+	Position foodPosition;
+	if (m_grid->randomEmptyPosition(foodPosition))
+	{
+		m_food->setPosition(foodPosition);
+		m_grid->update(m_food->position(), CellType::Food);
+	}
+	else
+	{
+		m_gameOver = true;
+		// dispatchEvent(GameplayEvent::GameCompleted);
+	}
+	// m_food->setPosition(m_grid->randomEmptyPosition());
+	// m_grid->update(m_food->position(), CellType::Food);
+}
+
+bool Game::foodTaken() const
+{
+	return m_grid->hitTest(m_snake->head(), CellType::Food);
 }
