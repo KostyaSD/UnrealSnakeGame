@@ -9,10 +9,10 @@ DEFINE_LOG_CATEGORY_STATIC(LogGame, All, All);
 
 using namespace SnakeGame;
 
-Game::Game(const Settings& settings) : c_settings(settings)
+Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) : c_settings(settings)
 {
 
-	m_grid = MakeShared<Grid>(settings.gridDims);
+	m_grid = MakeShared<Grid>(settings.gridDims, randomizer);
 
 	checkf(m_grid->dim().width / 2 >= settings.snake.defaultSize, TEXT("Snake initial lenght [%i] doesn't fit grid width [%i]"),
 		settings.snake.defaultSize, m_grid->dim().width);
@@ -31,6 +31,7 @@ void Game::update(float deltaSeconds, const Input& input)
 	if (died())
 	{
 		m_gameOver = true;
+		dispatchEvent(GameplayEvent::GameOver);
 		return;
 	}
 
@@ -38,16 +39,18 @@ void Game::update(float deltaSeconds, const Input& input)
 	{
 		++m_score;
 		m_snake->increase();
+		dispatchEvent(GameplayEvent::FoodTaken);
 		generateFood();
 	}
 
 	updateGrid();
 }
 
+
 void Game::updateGrid()
 {
 	m_grid->update(m_snake->links().GetHead(), CellType::Snake);
-	m_grid->printDebug();
+	//m_grid->printDebug();
 }
 
 bool Game::updateTime(float deltaSeconds)
@@ -75,7 +78,7 @@ void Game::generateFood()
 	else
 	{
 		m_gameOver = true;
-		// dispatchEvent(GameplayEvent::GameCompleted);
+		dispatchEvent(GameplayEvent::GameCompleted);
 	}
 	// m_food->setPosition(m_grid->randomEmptyPosition());
 	// m_grid->update(m_food->position(), CellType::Food);
@@ -84,4 +87,17 @@ void Game::generateFood()
 bool Game::foodTaken() const
 {
 	return m_grid->hitTest(m_snake->head(), CellType::Food);
+}
+
+void SnakeGame::Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
+{
+	m_gameplayEventCallback = callback;
+}
+
+void Game::dispatchEvent(GameplayEvent Event)
+{
+	if (m_gameplayEventCallback)
+	{
+		m_gameplayEventCallback(Event);
+	}
 }

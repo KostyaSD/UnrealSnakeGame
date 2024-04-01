@@ -4,6 +4,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "SnakeGame/Core/Food.h"
 #include "World/SG_WorldUtils.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 
 ASG_Food::ASG_Food()
 {
@@ -43,8 +45,19 @@ void ASG_Food::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (Food.IsValid())
+	SetActorLocation(GetFoodWorldLocation());
+}
+
+void ASG_Food::Explode()
+{
+	if (UNiagaraComponent* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetFoodWorldLocation()))
 	{
-		SetActorLocation(SnakeGame::WorldUtils::LinkPositionToVector(Food.Pin()->position(), CellSize, Dims));
+		NS->SetVariableLinearColor("SnakeColor", FoodColor);
 	}
+}
+
+FVector ASG_Food::GetFoodWorldLocation() const
+{
+	if (!Food.IsValid()) return FVector::ZeroVector;
+	return SnakeGame::WorldUtils::LinkPositionToVector(Food.Pin()->position(), CellSize, Dims);
 }

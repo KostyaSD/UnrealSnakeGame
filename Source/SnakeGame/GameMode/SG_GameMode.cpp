@@ -12,6 +12,8 @@
 #include "EnhancedInputComponent.h"
 #include "Characters/SG_Pawn.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
+
 ASG_GameMode::ASG_GameMode()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -24,6 +26,7 @@ void ASG_GameMode::StartPlay()
 	// init core game
 	Game = MakeUnique<SnakeGame::Game>(MakeSettings());
 	check(Game.IsValid());
+	SubscribeOnGameEvents();
 
 	// init world grid
 	const FTransform GridOrigin = FTransform::Identity;
@@ -42,8 +45,6 @@ void ASG_GameMode::StartPlay()
 	FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
 	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 	FoodVisual->FinishSpawning(GridOrigin);
-
-
 
 	// set pawn location fitting grid in viewport
 	auto* PC = GetWorld()->GetFirstPlayerController();
@@ -115,6 +116,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 	{
 		Game.Reset(new SnakeGame::Game(MakeSettings()));
 		check(Game.IsValid());
+		SubscribeOnGameEvents();
 		GridVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
@@ -140,4 +142,32 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
 	GS.snake.defaultSize = SnakeDefaultsSize;
 	GS.snake.startPosition = SnakeGame::Grid::center(GridDims.X, GridDims.Y);
 	return GS;
+}
+
+void ASG_GameMode::SubscribeOnGameEvents()
+{
+	using namespace SnakeGame;
+
+	Game->subscribeOnGameplayEvent(
+		[&](GameplayEvent Event)
+		{
+			switch (Event)
+			{
+				case GameplayEvent::GameOver:
+					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- GAME OVER -------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- SCORE: %i -------------"), Game->score());
+					SnakeVisual->Explode();
+					//FoodVisual->Hide();
+					//WorldUtils::SetUIInput(GetWorld(), true);
+					break;
+				case GameplayEvent::GameCompleted:
+					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- GAME COMPLETED -------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- SCORE: %i -------------"), Game->score());
+					break;
+				case GameplayEvent::FoodTaken:	//
+					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- FOOD TAKEN -------------"));
+					FoodVisual->Explode();
+					break;
+			}
+		});
 }
