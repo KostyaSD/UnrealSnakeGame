@@ -22,6 +22,7 @@ public:
 	void UpdateColor(const FLinearColor& Color);
 
 	void Explode();
+	void Hide();
 
 public:
 	virtual void Tick(float DeltaTime) override;
