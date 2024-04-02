@@ -12,6 +12,7 @@ double FOVTan(double FOVDegrees)
 
 double VerticalFOV(double HorFOVDegrees, double ViewportAspectHW)
 {
+	// https://en.m.wikipedia.org/wiki/Field_of_view_in_video_games
 	return FMath::RadiansToDegrees(2.0 * FMath::Atan(FMath::Tan(FMath::DegreesToRadians(HorFOVDegrees) * 0.5) * ViewportAspectHW));
 }
 
@@ -32,7 +33,7 @@ ASG_Pawn::ASG_Pawn()
 	Camera->SetupAttachment(Origin);
 }
 
-void ASG_Pawn::UpdateLocation(const SnakeGame::Dim& InDim, uint32 InCellSize, const FTransform& InGridOrigin)
+void ASG_Pawn::UpdateLocation(const SnakeGame::Dim& InDim, int32 InCellSize, const FTransform& InGridOrigin)
 {
 	Dim = InDim;
 	CellSize = InCellSize;
@@ -46,9 +47,7 @@ void ASG_Pawn::UpdateLocation(const SnakeGame::Dim& InDim, uint32 InCellSize, co
 	Viewport->ViewportResizedEvent.Remove(ResizeHandle);
 	ResizeHandle = Viewport->ViewportResizedEvent.AddUObject(this, &ASG_Pawn::OnViewportResized);
 
-#if WITH_EDITOR
 	OnViewportResized(Viewport, 0);
-#endif
 }
 
 void ASG_Pawn::OnViewportResized(FViewport* Viewport, uint32 Val)

@@ -37,7 +37,7 @@ void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCellSi
 	WorldWidth = GridDim.width * CellSize;
 	WorldHeight = GridDim.height * CellSize;
 
-	//scale mesh
+	// scale mesh
 	check(GridMesh->GetStaticMesh());
 	const FBox Box = GridMesh->GetStaticMesh()->GetBoundingBox();
 	const auto Size = Box.GetSize();
@@ -47,7 +47,7 @@ void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCellSi
 	GridMesh->SetRelativeScale3D(FVector(WorldHeight / Size.X, WorldWidth / Size.Y, 1.0));
 	GridMesh->SetRelativeLocation(0.5 * FVector(WorldHeight, WorldWidth, -Size.Z));
 
-	//setup material
+	// setup material
 	GridMaterial = GridMesh->CreateAndSetMaterialInstanceDynamic(0);
 	if (GridMaterial)
 	{
@@ -55,8 +55,7 @@ void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCellSi
 	}
 }
 
-void ASG_Grid::UpdateColors(const FSnakeColors& Colors) 
-
+void ASG_Grid::UpdateColors(const FSnakeColors& Colors)
 {
 	if (GridMaterial)
 	{
@@ -69,7 +68,7 @@ void ASG_Grid::UpdateColors(const FSnakeColors& Colors)
 void ASG_Grid::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//DrawGrid();
+	// DrawGrid();
 }
 
 void ASG_Grid::DrawGrid()
@@ -80,7 +79,7 @@ void ASG_Grid::DrawGrid()
 	{
 		const FVector StartLocation = GetActorLocation() + GetActorForwardVector() * CellSize * i;
 		// DrawDebugLine(GetWorld(), StartLocation, StartLocation + GetActorRightVector() * WorldWidth, FColor::Red, false, -1.0f, 0, 2.0f);
-		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorRightVector() * WorldWidth, FLinearColor::Red, 0, 2.0f);
+		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorRightVector() * WorldWidth, FLinearColor::Red, 1, 2.0f);
 	}
 
 	for (uint32 i = 0; i < GridDim.width + 1; ++i)
@@ -88,6 +87,6 @@ void ASG_Grid::DrawGrid()
 		const FVector StartLocation = GetActorLocation() + GetActorRightVector() * CellSize * i;
 		// DrawDebugLine(GetWorld(), StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FColor::Red, false, -1.0f,
 		// 0, 2.0f);
-		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FLinearColor::Red, 0, 2.0f);
+		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FLinearColor::Red, 1, 2.0f);
 	}
 }

@@ -13,7 +13,6 @@ namespace SnakeGame
 class Grid;
 }
 
-class UMaterialInstanceDynamic;
 class UStaticMeshComponent;
 
 UCLASS()
@@ -23,8 +22,6 @@ class SNAKEGAME_API ASG_Grid : public AActor
 
 public:
 	ASG_Grid();
-
-public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 CellSize);
@@ -33,10 +30,10 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-	USceneComponent* Origin;
+	TObjectPtr<USceneComponent> Origin;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* GridMesh;
+	TObjectPtr<UStaticMeshComponent> GridMesh;
 
 	virtual void BeginPlay() override;
 
@@ -48,5 +45,6 @@ private:
 	uint32 CellSize;
 	uint32 WorldWidth;
 	uint32 WorldHeight;
+
 	void DrawGrid();
 };

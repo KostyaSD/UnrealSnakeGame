@@ -4,8 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SnakeGame/Core/Food.h"
+#include "Core/Types.h"
+#include "World/SG_WorldTypes.h"
 #include "SG_Food.generated.h"
+
+namespace SnakeGame
+{
+class Food;
+}
 
 class UStaticMeshComponent;
 class UNiagaraSystem;
@@ -17,15 +23,15 @@ class SNAKEGAME_API ASG_Food : public AActor
 
 public:
 	ASG_Food();
+	virtual void Tick(float DeltaTime) override;
 
-	void SetModel(const TSharedPtr<SnakeGame::Food>& Food, uint32 CellSize, const SnakeGame::Dim& Dims);
+	void SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCellSize, const SnakeGame::Dim& InDims);
+
 	void UpdateColor(const FLinearColor& Color);
 
 	void Explode();
-	void Hide();
 
-public:
-	virtual void Tick(float DeltaTime) override;
+	void Hide();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -34,7 +40,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> FoodMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FVX")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 
 private:
@@ -42,5 +48,6 @@ private:
 	uint32 CellSize;
 	SnakeGame::Dim Dims;
 	FLinearColor FoodColor;
+
 	FVector GetFoodWorldLocation() const;
 };

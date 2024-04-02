@@ -13,15 +13,16 @@ class Grid;
 class Snake;
 class Food;
 
-class Game
+class SNAKEGAME_API Game
 {
 public:
 	Game(const Settings& settings, const IPositionRandomizerPtr& randomizer = MakeShared<PositionRandomizer>());
-	TSharedPtr<Grid> grid() const { return m_grid; };
 
-	TSharedPtr<Snake> snake() const { return m_snake; };
+	TSharedPtr<Grid> grid() const { return m_grid; }
 
-	TSharedPtr<Food> food() const { return m_food; };
+	TSharedPtr<Snake> snake() const { return m_snake; }
+
+	TSharedPtr<Food> food() const { return m_food; }
 
 	void update(float deltaSeconds, const Input& input);
 
@@ -46,7 +47,8 @@ private:
 
 	void updateGrid();
 	bool updateTime(float deltaSeconds);
-	bool died() const;
+	bool died(const Position& prevTailPosition) const;
+
 	void generateFood();
 	bool foodTaken() const;
 

@@ -9,7 +9,6 @@
 
 ASG_Food::ASG_Food()
 {
-
 	PrimaryActorTick.bCanEverTick = true;
 
 	Origin = CreateDefaultSubobject<USceneComponent>("Origin");

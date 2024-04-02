@@ -23,12 +23,12 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-	USceneComponent* Origin;
+	TObjectPtr<USceneComponent> Origin;
 
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* LinkMesh;
+	TObjectPtr<UStaticMeshComponent> LinkMesh;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "FVX")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 
 private:

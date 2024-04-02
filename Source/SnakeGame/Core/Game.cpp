@@ -11,12 +11,9 @@ using namespace SnakeGame;
 
 Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) : c_settings(settings)
 {
-
 	m_grid = MakeShared<Grid>(settings.gridDims, randomizer);
-
-	checkf(m_grid->dim().width / 2 >= settings.snake.defaultSize, TEXT("Snake initial lenght [%i] doesn't fit grid width [%i]"),
+	checkf(m_grid->dim().width / 2 >= settings.snake.defaultSize, TEXT("Snake initial length [%i] doesn't fit grid width [%i]"),
 		settings.snake.defaultSize, m_grid->dim().width);
-
 	m_snake = MakeShared<Snake>(settings.snake);
 	m_food = MakeShared<Food>();
 	updateGrid();
@@ -26,9 +23,11 @@ Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) :
 void Game::update(float deltaSeconds, const Input& input)
 {
 	if (m_gameOver || !updateTime(deltaSeconds)) return;
+
+	const auto prevTailPosition = m_snake->tail();
 	m_snake->move(input);
 
-	if (died())
+	if (died(prevTailPosition))
 	{
 		m_gameOver = true;
 		dispatchEvent(GameplayEvent::GameOver);
@@ -61,10 +60,11 @@ bool Game::updateTime(float deltaSeconds)
 	return true;
 }
 
-bool Game::died() const
+bool Game::died(const Position& prevTailPosition) const
 {
-	return m_grid->hitTest(m_snake->head(), CellType::Wall) ||	//
-		   m_grid->hitTest(m_snake->head(), CellType::Snake);
+	if (m_grid->hitTest(m_snake->head(), CellType::Wall)) return true;
+	if (m_snake->head() == prevTailPosition) return false;	// corner case
+	return m_grid->hitTest(m_snake->head(), CellType::Snake);
 }
 
 void Game::generateFood()
@@ -80,8 +80,6 @@ void Game::generateFood()
 		m_gameOver = true;
 		dispatchEvent(GameplayEvent::GameCompleted);
 	}
-	// m_food->setPosition(m_grid->randomEmptyPosition());
-	// m_grid->update(m_food->position(), CellType::Food);
 }
 
 bool Game::foodTaken() const
@@ -89,7 +87,7 @@ bool Game::foodTaken() const
 	return m_grid->hitTest(m_snake->head(), CellType::Food);
 }
 
-void SnakeGame::Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
+void Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
 {
 	m_gameplayEventCallbacks.Add(callback);
 }

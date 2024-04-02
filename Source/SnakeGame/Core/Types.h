@@ -8,7 +8,7 @@
 namespace SnakeGame
 {
 
-struct Dim
+struct SNAKEGAME_API Dim
 {
 	uint32 width;
 	uint32 height;
@@ -17,8 +17,7 @@ struct Dim
 struct SNAKEGAME_API Position
 {
 	Position(uint32 inX, uint32 inY) : x(inX), y(inY) {}
-	Position(const Position& position = Position::Zero) : x(position.x), y(position.y) {}
-	// Position() = default;
+	Position() = default;
 
 	uint32 x{0};
 	uint32 y{0};
@@ -57,13 +56,13 @@ enum class CellType
 	Food
 };
 
-struct Settings
+struct SNAKEGAME_API Settings
 {
 	Dim gridDims{40, 10};
 	struct Snake
 	{
 		uint32 defaultSize{4};
-		Position startPosition{Position::Zero};
+		Position startPosition{0, 0};
 	} snake;
 	float gameSpeed{1.0f};
 };

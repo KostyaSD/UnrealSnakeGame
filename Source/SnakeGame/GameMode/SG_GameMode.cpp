@@ -13,6 +13,10 @@
 #include "Characters/SG_Pawn.h"
 #include "UI/SG_HUD.h"
 #include "World/SG_WorldUtils.h"
+#include "Settings/SG_GameUserSettings.h"
+#include "Engine/ExponentialHeightFog.h"  //
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
 
@@ -38,12 +42,12 @@ void ASG_GameMode::StartPlay()
 	GridVisual->SetModel(Game->grid(), CellSize);
 	GridVisual->FinishSpawning(GridOrigin);
 
-	// init world Snake
+	// init world snake
 	SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
 	SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 	SnakeVisual->FinishSpawning(GridOrigin);
 
-	// init world Food
+	// init world food
 	FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
 	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 	FoodVisual->FinishSpawning(GridOrigin);
@@ -57,21 +61,46 @@ void ASG_GameMode::StartPlay()
 	check(Game->grid().IsValid());
 	Pawn->UpdateLocation(Game->grid()->dim(), CellSize, GridOrigin);
 
+	//
+	FindFog();
+
+	// update colors
 	check(ColorsTable);
 	const auto RowsCount = ColorsTable->GetRowNames().Num();
 	check(RowsCount >= 1);
-
 	ColorTableIndex = FMath::RandRange(0, RowsCount - 1);
 	UpdateColors();
 
+	//
 	SetupInput();
 
+	//
 	HUD = Cast<ASG_HUD>(PC->GetHUD());
 	check(HUD);
 	HUD->SetModel(Game);
-
 	const FString ResetGameKeyName = SnakeGame::WorldUtils::FindActionKeyName(InputMapping, ResetGameInputAction);
 	HUD->SetInputKeyNames(ResetGameKeyName);
+
+	SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
+}
+
+void ASG_GameMode::NextColor()
+{
+	if (ColorsTable)
+	{
+		ColorTableIndex = (ColorTableIndex + 1) % ColorsTable->GetRowNames().Num();
+		UpdateColors();
+	}
+}
+
+void ASG_GameMode::FindFog()
+{
+	TArray<AActor*> Fogs;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AExponentialHeightFog::StaticClass(), Fogs);
+	if (Fogs.Num() > 0)
+	{
+		Fog = Cast<AExponentialHeightFog>(Fogs[0]);
+	}
 }
 
 void ASG_GameMode::UpdateColors()
@@ -83,6 +112,13 @@ void ASG_GameMode::UpdateColors()
 		GridVisual->UpdateColors(*ColorSet);
 		SnakeVisual->UpdateColors(*ColorSet);
 		FoodVisual->UpdateColor(ColorSet->FoodColor);
+
+		// update scene ambient color via fog
+		if (Fog && Fog->GetComponent())
+		{
+			Fog->GetComponent()->SkyAtmosphereAmbientContributionColorScale = ColorSet->SkyAtmosphereColor;
+			Fog->MarkComponentsRenderStateDirty();
+		}
 	}
 }
 
@@ -131,6 +167,8 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 		HUD->SetModel(Game);
 		SnakeInput = SnakeGame::Input::Default;
+		NextColor();
+		SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
 	}
 }
 
@@ -147,10 +185,23 @@ void ASG_GameMode::Tick(float DeltaSeconds)
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
 {
 	SnakeGame::Settings GS;
-	GS.gridDims = SnakeGame::Dim{GridDims.X, GridDims.Y};
-	GS.gameSpeed = GameSpeed;
-	GS.snake.defaultSize = SnakeDefaultsSize;
-	GS.snake.startPosition = SnakeGame::Grid::center(GridDims.X, GridDims.Y);
+
+#if WITH_EDITOR
+	if (bOverrideUserSettings)
+	{
+		GS.gridDims = SnakeGame::Dim{GridDims.X, GridDims.Y};
+		GS.gameSpeed = GameSpeed;
+	}
+	else
+#endif
+		if (const auto* UserSettings = USG_GameUserSettings::Get())
+	{
+		GS.gridDims = UserSettings->GridSize();
+		GS.gameSpeed = UserSettings->GameSpeed();
+	}
+
+	GS.snake.defaultSize = SnakeDefaultSize;
+	GS.snake.startPosition = SnakeGame::Grid::center(GS.gridDims.width, GS.gridDims.height);
 	return GS;
 }
 
@@ -164,18 +215,18 @@ void ASG_GameMode::SubscribeOnGameEvents()
 			switch (Event)
 			{
 				case GameplayEvent::GameOver:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- GAME OVER -------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- SCORE: %i -------------"), Game->score());
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
 					SnakeVisual->Explode();
 					FoodVisual->Hide();
-					//WorldUtils::SetUIInput(GetWorld(), true);
+					WorldUtils::SetUIInput(GetWorld(), true);
 					break;
 				case GameplayEvent::GameCompleted:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- GAME COMPLETED -------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- SCORE: %i -------------"), Game->score());
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
 					break;
 				case GameplayEvent::FoodTaken:	//
-					UE_LOG(LogSnakeGameMode, Display, TEXT("------------- FOOD TAKEN -------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
 					FoodVisual->Explode();
 					break;
 			}

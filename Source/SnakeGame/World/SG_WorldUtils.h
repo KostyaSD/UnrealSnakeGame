@@ -3,8 +3,8 @@
 #pragma once
 
 #include "SnakeGame/Core/Types.h"
-#include "Components/StaticMeshComponent.h"
 #include "CoreMinimal.h"
+#include "Components/StaticMeshComponent.h"
 #include "InputAction.h"
 #include "InputMappingContext.h"
 #include "EnhancedActionKeyMapping.h"
@@ -35,7 +35,7 @@ public:
 	{
 		const int32 TotalSeconds = FMath::RoundToInt(TimeSeconds);
 		// const int32 Hours = TotalSeconds / 3600;
-		const int32 Minutes = TotalSeconds / 60;
+		const int32 Minutes = TotalSeconds / 60;  // if you want to display hours: Minutes = (TotalSeconds / 60) % 60;
 		const int32 Seconds = TotalSeconds % 60;
 		const FString FormattedTime = FString::Printf(TEXT("%02i:%02i"), Minutes, Seconds);
 		return FText::FromString(FormattedTime);
@@ -46,12 +46,23 @@ public:
 		const FString FormattedScore = FString::Printf(TEXT("%02i"), Score);
 		return FText::FromString(FormattedScore);
 	}
+
 	static FString FindActionKeyName(const TObjectPtr<UInputMappingContext>& InputMapping, const TObjectPtr<UInputAction>& Action)
 	{
 		auto* FoundAcionKeyMapping = InputMapping->GetMappings().FindByPredicate([&](const FEnhancedActionKeyMapping& Mapping)	//
 			{ return Mapping.Action == Action; });
 
 		return FoundAcionKeyMapping ? FoundAcionKeyMapping->Key.GetDisplayName().ToString() : FString{};
+	}
+
+	static void SetUIInput(UWorld* World, bool Enabled)
+	{
+		if (!World) return;
+		if (auto* PC = World->GetFirstPlayerController())
+		{
+			PC->SetShowMouseCursor(Enabled);
+			Enabled ? PC->SetInputMode(FInputModeGameAndUI().SetHideCursorDuringCapture(false)) : PC->SetInputMode(FInputModeGameOnly());
+		}
 	}
 };
 }  // namespace SnakeGame

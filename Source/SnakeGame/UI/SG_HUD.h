@@ -20,7 +20,7 @@ enum class EUIGameState : uint8
 namespace SnakeGame
 {
 class Game;
-}
+}  // namespace SnakeGame
 
 UCLASS()
 class SNAKEGAME_API ASG_HUD : public AHUD
@@ -29,8 +29,10 @@ class SNAKEGAME_API ASG_HUD : public AHUD
 
 public:
 	ASG_HUD();
+
 	void SetModel(const TSharedPtr<SnakeGame::Game>& Game);
 	void SetInputKeyNames(const FString& ResetGameKeyName);
+
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:

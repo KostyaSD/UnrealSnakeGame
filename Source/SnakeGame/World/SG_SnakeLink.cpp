@@ -35,7 +35,7 @@ void ASG_SnakeLink::UpdateScale(uint32 CellSize)
 
 void ASG_SnakeLink::Explode()
 {
-	if (UNiagaraComponent* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation()))
+	if (auto* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetActorLocation()))
 	{
 		NS->SetVariableLinearColor("SnakeColor", LinkColor);
 	}

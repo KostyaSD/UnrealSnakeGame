@@ -10,12 +10,12 @@
 #include "SG_GameMode.generated.h"
 
 class ASG_Grid;
+class AExponentialHeightFog;
 class ASG_Snake;
-class ASG_Food;
-class ASG_HUD;
-class UDataTable;
 class UInputAction;
 class UInputMappingContext;
+class ASG_Food;
+class ASG_HUD;
 
 UCLASS()
 class SNAKEGAME_API ASG_GameMode : public AGameModeBase
@@ -28,16 +28,23 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100"), Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, Category = "Settings")
+	bool bOverrideUserSettings{false};
+
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100", EditCondition = "bOverrideUserSettings", EditConditionHides),
+		Category = "Settings")
 	FUintPoint GridDims{10, 10};
 
-	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100"), Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100", EditCondition = "bOverrideUserSettings", EditConditionHides),
+		Category = "Settings")
 	uint32 CellSize{10};
 
-	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "4", ClampMax = "10"), Category = "Settings")
-	uint32 SnakeDefaultsSize{5};
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "4", ClampMax = "10", EditCondition = "bOverrideUserSettings", EditConditionHides),
+		Category = "Settings")
+	uint32 SnakeDefaultSize{5};
 
-	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.01", ClampMax = "10"), Category = "Settings")
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.01", ClampMax = "10", EditCondition = "bOverrideUserSettings", EditConditionHides),
+		Category = "Settings")
 	float GameSpeed{1.0f};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
@@ -65,12 +72,6 @@ protected:
 	TObjectPtr<UInputMappingContext> InputMapping;
 
 private:
-	TSharedPtr<SnakeGame::Game> Game;
-	uint32 ColorTableIndex{0};
-	SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
-
-	SnakeGame::Settings MakeSettings() const;
-
 	UPROPERTY()
 	TObjectPtr<ASG_Grid> GridVisual;
 
@@ -81,7 +82,22 @@ private:
 	TObjectPtr<ASG_Food> FoodVisual;
 
 	UPROPERTY()
+	TObjectPtr<AExponentialHeightFog> Fog;
+
+	UPROPERTY()
 	TObjectPtr<ASG_HUD> HUD;
+
+	UFUNCTION(Exec, Category = "Console command")
+	void NextColor();
+
+private:
+	TSharedPtr<SnakeGame::Game> Game;
+	uint32 ColorTableIndex{0};
+	SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
+
+	SnakeGame::Settings MakeSettings() const;
+
+	void FindFog();
 
 	void UpdateColors();
 
@@ -92,3 +108,4 @@ private:
 
 	void SubscribeOnGameEvents();
 };
+

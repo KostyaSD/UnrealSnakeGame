@@ -4,11 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SnakeGame/Core/Snake.h"
 #include "World/SG_WorldTypes.h"
+#include "Core/Types.h"
 #include "SG_Snake.generated.h"
 
+namespace SnakeGame
+{
+class Snake;
+}
+
 class ASG_SnakeLink;
+class USG_ObjectPool;
 
 UCLASS()
 class SNAKEGAME_API ASG_Snake : public AActor
@@ -23,15 +29,12 @@ public:
 
 	void Explode();
 
-public:
-	virtual void Tick(float DeltaTime) override;
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<ASG_SnakeLink> SnakeHeadClass;
+	TSubclassOf<AActor> SnakeLinkClass;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	TSubclassOf<ASG_SnakeLink> SnakeLinkClass;
+public:
+	virtual void Tick(float DeltaTime) override;
 
 private:
 	TWeakPtr<SnakeGame::Snake> Snake;
@@ -40,5 +43,10 @@ private:
 	FLinearColor SnakeLinkColor;
 
 	UPROPERTY()
-	TArray<ASG_SnakeLink*> SnakeLinks;
+	TArray<TObjectPtr<ASG_SnakeLink>> SnakeLinks;
+
+	UPROPERTY()
+	TObjectPtr<USG_ObjectPool> SnakeObjectPool{nullptr};
+
+	void InitObjectPool();
 };

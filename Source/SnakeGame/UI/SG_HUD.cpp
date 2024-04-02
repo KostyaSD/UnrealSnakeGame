@@ -50,6 +50,7 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 				case GameplayEvent::FoodTaken:	//
 					GameplayWidget->SetScore(InGame->score());
 					break;
+
 				case GameplayEvent::GameCompleted: [[fallthrough]];
 				case GameplayEvent::GameOver:  //
 					GameOverWidget->SetScore(InGame->score());
@@ -77,7 +78,6 @@ void ASG_HUD::Tick(float DeltaSeconds)
 }
 
 void ASG_HUD::SetUIGameState(EUIGameState InGameState)
-
 {
 	if (CurrentWidget)
 	{

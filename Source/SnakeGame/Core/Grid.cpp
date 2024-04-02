@@ -9,6 +9,14 @@ using namespace SnakeGame;
 Grid::Grid(const Dim& dim, const IPositionRandomizerPtr& randomizer)  //
 	: c_dim(Dim{dim.width + 2, dim.height + 2}), m_positionRandomizer(randomizer)
 {
+	/*
+	 * * * * * *
+	 * 0 0 0 0 *
+	 * 0 0 0 0 *
+	 * 0 0 0 0 *
+	 * * * * * *
+	 */
+
 	m_cells.Init(CellType::Empty, c_dim.width * c_dim.height);
 	initWalls();
 	printDebug();
@@ -63,6 +71,7 @@ void Grid::update(const TPositionPtr* links, CellType cellType)
 		link = link->GetNextNode();
 	}
 }
+
 void Grid::update(const Position& position, CellType cellType)
 {
 	freeCellsByType(cellType);
@@ -83,16 +92,7 @@ void Grid::freeCellsByType(CellType cellType)
 		const uint32 ind = m_indByType[cellType][i];
 		m_cells[ind] = CellType::Empty;
 	}
-
 	m_indByType[cellType].Empty();
-
-	for (auto& cell : m_cells)
-	{
-		if (cell == cellType)
-		{
-			cell = CellType::Empty;
-		}
-	}
 }
 
 bool Grid::hitTest(const Position& position, CellType cellType) const

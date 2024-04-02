@@ -7,14 +7,16 @@
 
 namespace SnakeGame
 {
-
 class SNAKEGAME_API Snake
 {
 public:
 	Snake(const Settings::Snake& settings);
 
 	const TSnakeList& links() const { return m_links; }
+
 	Position head() const { return m_links.GetHead()->GetValue(); }
+
+	Position tail() const { return m_links.GetTail()->GetValue(); }
 
 	void move(const Input& input);
 
@@ -22,6 +24,6 @@ public:
 
 private:
 	TSnakeList m_links;
-	Input m_lastInput{Input::Default};
+	Input m_lastInput{1, 0};
 };
 }  // namespace SnakeGame
