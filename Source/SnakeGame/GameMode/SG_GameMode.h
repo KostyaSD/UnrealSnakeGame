@@ -16,6 +16,7 @@ class UInputAction;
 class UInputMappingContext;
 class ASG_Food;
 class ASG_HUD;
+class ASG_WallBox;//
 
 UCLASS()
 class SNAKEGAME_API ASG_GameMode : public AGameModeBase
@@ -48,7 +49,11 @@ protected:
 	float GameSpeed{1.0f};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	TSubclassOf<ASG_Grid> GridVisualClass;
+	TSubclassOf<ASG_Grid> GridVisualClass;	
+	
+	//
+	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	TSubclassOf<ASG_WallBox> WallBoxVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_Snake> SnakeVisualClass;
@@ -74,6 +79,10 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<ASG_Grid> GridVisual;
+
+	//
+	UPROPERTY()
+	TObjectPtr<ASG_WallBox> WallBoxVisual;
 
 	UPROPERTY()
 	TObjectPtr<ASG_Snake> SnakeVisual;

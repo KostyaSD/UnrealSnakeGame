@@ -64,6 +64,7 @@ struct SNAKEGAME_API Settings
 		uint32 defaultSize{4};
 		Position startPosition{0, 0};
 	} snake;
+
 	float gameSpeed{1.0f};
 };
 

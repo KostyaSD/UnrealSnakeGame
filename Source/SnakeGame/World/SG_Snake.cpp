@@ -38,7 +38,7 @@ void ASG_Snake::SetModel(const TSharedPtr<SnakeGame::Snake>& InSnake, uint32 InC
 	{
 		const FTransform Transform = FTransform(SnakeGame::WorldUtils::LinkPositionToVector(Link, CellSize, Dims));
 		auto* LinkActor = SnakeObjectPool->Pop<ASG_SnakeLink>(GetWorld(), Transform, SnakeLinkClass);
-		LinkActor->UpdateScale(CellSize);
+		LinkActor->UpdateScale(CellSize * 0.9);
 		SnakeLinks.Add(LinkActor);
 	}
 }
@@ -81,7 +81,7 @@ void ASG_Snake::Tick(float DeltaTime)
 	{
 		const FTransform Transform = FTransform(SnakeGame::WorldUtils::LinkPositionToVector(LinkPtr->GetValue(), CellSize, Dims));
 		auto* LinkActor = SnakeObjectPool->Pop<ASG_SnakeLink>(GetWorld(), Transform, SnakeLinkClass);
-		LinkActor->UpdateScale(CellSize);
+		LinkActor->UpdateScale(CellSize * 0.9);
 		LinkActor->UpdateColor(SnakeLinkColor);
 		SnakeLinks.Add(LinkActor);
 		LinkPtr = LinkPtr->GetNextNode();

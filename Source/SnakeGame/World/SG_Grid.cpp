@@ -24,6 +24,7 @@ ASG_Grid::ASG_Grid()
 void ASG_Grid::BeginPlay()
 {
 	Super::BeginPlay();
+
 }
 
 void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCellSize)
@@ -89,4 +90,5 @@ void ASG_Grid::DrawGrid()
 		// 0, 2.0f);
 		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FLinearColor::Red, 1, 2.0f);
 	}
+
 }

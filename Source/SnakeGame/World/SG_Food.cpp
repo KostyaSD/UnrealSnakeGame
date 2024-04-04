@@ -26,7 +26,7 @@ void ASG_Food::SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCell
 	CellSize = InCellSize;
 	Dims = InDims;
 
-	SnakeGame::WorldUtils::ScaleMesh(FoodMesh, FVector(CellSize));
+	SnakeGame::WorldUtils::ScaleMesh(FoodMesh, 0.9 * FVector(CellSize));
 
 	SetActorHiddenInGame(false);
 }

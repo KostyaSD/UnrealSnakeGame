@@ -5,6 +5,7 @@
 #include "SnakeGame/Core/Types.h"
 #include "SnakeGame/Core/Grid.h"
 #include "World/SG_Grid.h"
+#include "World/SG_WallBox.h"  //
 #include "World/SG_Snake.h"
 #include "World/SG_Food.h"
 #include "World/SG_WorldTypes.h"
@@ -41,6 +42,11 @@ void ASG_GameMode::StartPlay()
 	check(GridVisual);
 	GridVisual->SetModel(Game->grid(), CellSize);
 	GridVisual->FinishSpawning(GridOrigin);
+
+	// init WallBoX
+	WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
+	WallBoxVisual->SetModel(Game->grid(), CellSize);
+	WallBoxVisual->FinishSpawning(GridOrigin);
 
 	// init world snake
 	SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
@@ -111,6 +117,7 @@ void ASG_GameMode::UpdateColors()
 	{
 		GridVisual->UpdateColors(*ColorSet);
 		SnakeVisual->UpdateColors(*ColorSet);
+		WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
 		FoodVisual->UpdateColor(ColorSet->FoodColor);
 
 		// update scene ambient color via fog
