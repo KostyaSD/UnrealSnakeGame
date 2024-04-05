@@ -35,6 +35,7 @@ private:
 		{CellType::Snake, {}},	//
 		{CellType::Wall, {}},	//
 		{CellType::Food, {}},	//
+		{CellType::Bonus, {}},	//
 	};
 
 	TSharedPtr<IPositionRandomizer> m_positionRandomizer;

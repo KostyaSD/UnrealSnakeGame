@@ -53,7 +53,8 @@ enum class CellType
 	Empty = 0,
 	Wall,
 	Snake,
-	Food
+	Food,
+	Bonus
 };
 
 struct SNAKEGAME_API Settings
@@ -75,7 +76,8 @@ enum class GameplayEvent
 {
 	GameOver = 0,
 	GameCompleted,
-	FoodTaken
+	FoodTaken,
+	BonusTaken
 };
 
 using GameplayEventCallback = TFunction<void(GameplayEvent)>;

@@ -4,6 +4,7 @@
 #include "SnakeGame/Core/Grid.h"
 #include "SnakeGame/Core/Snake.h"
 #include "SnakeGame/Core/Food.h"
+#include "SnakeGame/Core/Bonus.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogGame, All, All);
 
@@ -16,8 +17,10 @@ Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) :
 		settings.snake.defaultSize, m_grid->dim().width);
 	m_snake = MakeShared<Snake>(settings.snake);
 	m_food = MakeShared<Food>();
+	m_bonus = MakeShared<Bonus>();
 	updateGrid();
 	generateFood();
+	generateBonus();
 }
 
 void Game::update(float deltaSeconds, const Input& input)
@@ -48,7 +51,7 @@ void Game::update(float deltaSeconds, const Input& input)
 void Game::updateGrid()
 {
 	m_grid->update(m_snake->links().GetHead(), CellType::Snake);
-	// m_grid->printDebug();
+	m_grid->printDebug();
 }
 
 bool Game::updateTime(float deltaSeconds)
@@ -85,6 +88,26 @@ void Game::generateFood()
 bool Game::foodTaken() const
 {
 	return m_grid->hitTest(m_snake->head(), CellType::Food);
+}
+
+void Game::generateBonus()
+{
+	Position bonusPosition;
+	if (m_grid->randomEmptyPosition(bonusPosition))
+	{
+		m_bonus->setPosition(bonusPosition);
+		m_grid->update(m_bonus->position(), CellType::Bonus);
+	}
+	else
+	{
+		m_gameOver = true;
+		dispatchEvent(GameplayEvent::GameCompleted);
+	}
+}
+
+bool Game::bonusTaken() const
+{
+	return m_grid->hitTest(m_snake->head(), CellType::Bonus);
 }
 
 void Game::subscribeOnGameplayEvent(GameplayEventCallback callback)

@@ -7,16 +7,16 @@
 
 namespace SnakeGame
 {
-class SNAKEGAME_API Food
+class SNAKEGAME_API Bonus
 {
 public:
-	Food() = default;
+	Bonus() = default;
 
 	void setPosition(const Position& position);
 
 	Position position() const;
 
 private:
-	Position m_position;
+	Position m_position{};
 };
 }  // namespace SnakeGame

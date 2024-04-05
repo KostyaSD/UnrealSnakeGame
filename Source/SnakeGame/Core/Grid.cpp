@@ -53,6 +53,7 @@ void Grid::printDebug()
 				case CellType::Wall: symbol = '*'; break;
 				case CellType::Snake: symbol = '_'; break;
 				case CellType::Food: symbol = 'F'; break;
+				case CellType::Bonus: symbol = 'B'; break;
 			}
 			line.AppendChar(symbol).AppendChar(' ');
 		}
