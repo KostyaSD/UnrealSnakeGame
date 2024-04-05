@@ -10,17 +10,17 @@
 UENUM()
 enum class EGameSpeed : uint8
 {
-	Worm = 0,
-	Snake,
-	Python
+	Easy = 0,
+	Medium,
+	Hard
 };
 
 UENUM()
 enum class EGridSize : uint8
 {
 	Size_30x10 = 0,
-	Size_50x15,
-	Size_80x20
+	Size_40x12,
+	Size_50x14
 };
 
 UCLASS()
@@ -41,8 +41,8 @@ public:
 
 	void SaveSnakeSettings(EGameSpeed GameSpeed, EGridSize GridSize);
 
-	EGameSpeed GameSpeedByName(const FString& Name) const { return FindOptionByNameOrDefault(GameSpeeds, Name, EGameSpeed::Snake); }
-	EGridSize GridSizeByName(const FString& Name) const { return FindOptionByNameOrDefault(GridSizes, Name, EGridSize::Size_50x15); }
+	EGameSpeed GameSpeedByName(const FString& Name) const { return FindOptionByNameOrDefault(GameSpeeds, Name, EGameSpeed::Easy); }
+	EGridSize GridSizeByName(const FString& Name) const { return FindOptionByNameOrDefault(GridSizes, Name, EGridSize::Size_40x12); }
 
 	float GameSpeed() const { return CurrentSpeed.Value; }
 	SnakeGame::Dim GridSize() const { return CurrentGridSize.Value; }
@@ -56,9 +56,9 @@ private:
 
 	const TMap<EGameSpeed, FSpeedData> GameSpeeds  //
 		{
-			{EGameSpeed::Worm, {"Worm", 0.3f}},		  //
-			{EGameSpeed::Snake, {"Snake", 0.1f}},	  //
-			{EGameSpeed::Python, {"Python", 0.05f}},  //
+			{EGameSpeed::Easy, {"Easy", 0.24f}},	  //
+			{EGameSpeed::Medium, {"Medium", 0.12f}},  //
+			{EGameSpeed::Hard, {"Hard", 0.06f}},	  //
 		};
 
 	struct FGridData
@@ -70,12 +70,12 @@ private:
 	const TMap<EGridSize, FGridData> GridSizes	//
 		{
 			{EGridSize::Size_30x10, {"30x10", SnakeGame::Dim{30, 10}}},	 //
-			{EGridSize::Size_50x15, {"50x15", SnakeGame::Dim{50, 15}}},	 //
-			{EGridSize::Size_80x20, {"80x20", SnakeGame::Dim{80, 20}}},	 //
+			{EGridSize::Size_40x12, {"40x12", SnakeGame::Dim{40, 12}}},	 //
+			{EGridSize::Size_50x14, {"50x14", SnakeGame::Dim{50, 14}}},	 //
 		};
 
-	FSpeedData CurrentSpeed{GameSpeeds[EGameSpeed::Snake]};
-	FGridData CurrentGridSize{GridSizes[EGridSize::Size_50x15]};
+	FSpeedData CurrentSpeed{GameSpeeds[EGameSpeed::Easy]};
+	FGridData CurrentGridSize{GridSizes[EGridSize::Size_30x10]};
 
 	template <typename MapType, typename EnumType>
 	EnumType FindOptionByNameOrDefault(const MapType& Map, const FString& Name, EnumType Default) const

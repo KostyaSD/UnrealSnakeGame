@@ -6,7 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "SnakeGame/Core/Grid.h"
 #include "World/SG_WorldTypes.h"
-// #include "SnakeGame/Core/Types.h"
 #include "SG_WallBox.generated.h"
 
 namespace SnakeGame

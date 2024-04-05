@@ -21,9 +21,6 @@ struct FSnakeColors : public FTableRowBase
 	FLinearColor GridLineColor{FLinearColor::White};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	FLinearColor SkyAtmosphereColor{FLinearColor::Blue};
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	FLinearColor SnakeHeadColor{FLinearColor::White};
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)

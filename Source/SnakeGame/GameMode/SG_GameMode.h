@@ -10,13 +10,12 @@
 #include "SG_GameMode.generated.h"
 
 class ASG_Grid;
-class AExponentialHeightFog;
 class ASG_Snake;
 class UInputAction;
 class UInputMappingContext;
 class ASG_Food;
 class ASG_HUD;
-class ASG_WallBox;//
+class ASG_WallBox;
 
 UCLASS()
 class SNAKEGAME_API ASG_GameMode : public AGameModeBase
@@ -51,7 +50,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;	
 	
-	//
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_WallBox> WallBoxVisualClass;
 
@@ -90,8 +88,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<ASG_Food> FoodVisual;
 
-	UPROPERTY()
-	TObjectPtr<AExponentialHeightFog> Fog;
 
 	UPROPERTY()
 	TObjectPtr<ASG_HUD> HUD;
@@ -105,8 +101,6 @@ private:
 	SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
 
 	SnakeGame::Settings MakeSettings() const;
-
-	void FindFog();
 
 	void UpdateColors();
 

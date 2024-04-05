@@ -5,7 +5,7 @@
 #include "SnakeGame/Core/Types.h"
 #include "SnakeGame/Core/Grid.h"
 #include "World/SG_Grid.h"
-#include "World/SG_WallBox.h"  //
+#include "World/SG_WallBox.h"
 #include "World/SG_Snake.h"
 #include "World/SG_Food.h"
 #include "World/SG_WorldTypes.h"
@@ -15,8 +15,6 @@
 #include "UI/SG_HUD.h"
 #include "World/SG_WorldUtils.h"
 #include "Settings/SG_GameUserSettings.h"
-#include "Engine/ExponentialHeightFog.h"  //
-#include "Components/ExponentialHeightFogComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All);
@@ -43,7 +41,7 @@ void ASG_GameMode::StartPlay()
 	GridVisual->SetModel(Game->grid(), CellSize);
 	GridVisual->FinishSpawning(GridOrigin);
 
-	// init WallBoX
+	// init WallBox
 	WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
 	WallBoxVisual->SetModel(Game->grid(), CellSize);
 	WallBoxVisual->FinishSpawning(GridOrigin);
@@ -66,9 +64,6 @@ void ASG_GameMode::StartPlay()
 	check(Pawn);
 	check(Game->grid().IsValid());
 	Pawn->UpdateLocation(Game->grid()->dim(), CellSize, GridOrigin);
-
-	//
-	FindFog();
 
 	// update colors
 	check(ColorsTable);
@@ -99,16 +94,6 @@ void ASG_GameMode::NextColor()
 	}
 }
 
-void ASG_GameMode::FindFog()
-{
-	TArray<AActor*> Fogs;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AExponentialHeightFog::StaticClass(), Fogs);
-	if (Fogs.Num() > 0)
-	{
-		Fog = Cast<AExponentialHeightFog>(Fogs[0]);
-	}
-}
-
 void ASG_GameMode::UpdateColors()
 {
 	const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
@@ -119,13 +104,6 @@ void ASG_GameMode::UpdateColors()
 		SnakeVisual->UpdateColors(*ColorSet);
 		WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
 		FoodVisual->UpdateColor(ColorSet->FoodColor);
-
-		// update scene ambient color via fog
-		if (Fog && Fog->GetComponent())
-		{
-			Fog->GetComponent()->SkyAtmosphereAmbientContributionColorScale = ColorSet->SkyAtmosphereColor;
-			Fog->MarkComponentsRenderStateDirty();
-		}
 	}
 }
 
