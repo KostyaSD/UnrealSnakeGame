@@ -57,7 +57,7 @@ void ASG_GameMode::StartPlay()
 	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 	FoodVisual->FinishSpawning(GridOrigin);
 
-	// init world food
+	// init world bonus
 	BonusVisual = GetWorld()->SpawnActorDeferred<ASG_Bonus>(BonusVisualClass, GridOrigin);
 	BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
 	BonusVisual->FinishSpawning(GridOrigin);
@@ -173,6 +173,13 @@ void ASG_GameMode::Tick(float DeltaSeconds)
 	{
 		Game->update(DeltaSeconds, SnakeInput);
 	}
+	TimeBar += DeltaSeconds;
+	if (TimeBar >= MaxTime)
+	{
+		TimeBar = 0.0f;
+		OnGameplayEvent(SnakeGame::GameplayEvent::GameOver);
+	}
+	HUD->SetTimerValue(TimeBar, MaxTime);
 }
 
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
@@ -200,28 +207,33 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
 
 void ASG_GameMode::SubscribeOnGameEvents()
 {
-	using namespace SnakeGame;
+	Game->subscribeOnGameplayEvent([this](SnakeGame::GameplayEvent Event) { OnGameplayEvent(Event); });
+}
 
-	Game->subscribeOnGameplayEvent(
-		[&](GameplayEvent Event)
-		{
-			switch (Event)
-			{
-				case GameplayEvent::GameOver:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
-					SnakeVisual->Explode();
-					FoodVisual->Hide();
-					WorldUtils::SetUIInput(GetWorld(), true);
-					break;
-				case GameplayEvent::GameCompleted:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
-					break;
-				case GameplayEvent::FoodTaken:	//
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
-					FoodVisual->Explode();
-					break;
-			}
-		});
+void ASG_GameMode::OnGameplayEvent(SnakeGame::GameplayEvent Event)
+{
+	using namespace SnakeGame;
+	switch (Event)
+	{
+		case GameplayEvent::GameOver:
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+			SnakeVisual->Explode();
+			FoodVisual->Hide();
+			BonusVisual->Hide();
+			WorldUtils::SetUIInput(GetWorld(), true);
+			break;
+		case GameplayEvent::GameCompleted:
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+			break;
+		case GameplayEvent::FoodTaken:	//
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
+			FoodVisual->Explode();
+			TimeBar = 0.0f;
+			break;
+		case GameplayEvent::BonusTaken:	 //
+			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- BONUS TAKEN --------------"));
+			break;
+	}
 }

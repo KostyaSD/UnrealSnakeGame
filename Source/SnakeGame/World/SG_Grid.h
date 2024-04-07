@@ -45,6 +45,4 @@ private:
 	uint32 CellSize;
 	uint32 WorldWidth;
 	uint32 WorldHeight;
-
-	void DrawGrid();
 };

@@ -9,17 +9,8 @@ using namespace SnakeGame;
 Grid::Grid(const Dim& dim, const IPositionRandomizerPtr& randomizer)  //
 	: c_dim(Dim{dim.width + 2, dim.height + 2}), m_positionRandomizer(randomizer)
 {
-	/*
-	 * * * * * *
-	 * 0 0 0 0 *
-	 * 0 0 0 0 *
-	 * 0 0 0 0 *
-	 * * * * * *
-	 */
-
 	m_cells.Init(CellType::Empty, c_dim.width * c_dim.height);
 	initWalls();
-	printDebug();
 }
 
 void Grid::initWalls()
@@ -36,30 +27,6 @@ void Grid::initWalls()
 			}
 		}
 	}
-}
-
-void Grid::printDebug()
-{
-#if !UE_BUILD_SHIPPING
-	for (uint32 y = 0; y < c_dim.height; ++y)
-	{
-		FString line;
-		for (uint32 x = 0; x < c_dim.width; ++x)
-		{
-			TCHAR symbol{};
-			switch (m_cells[posToIndex(x, y)])
-			{
-				case CellType::Empty: symbol = '0'; break;
-				case CellType::Wall: symbol = '*'; break;
-				case CellType::Snake: symbol = '_'; break;
-				case CellType::Food: symbol = 'F'; break;
-				case CellType::Bonus: symbol = 'B'; break;
-			}
-			line.AppendChar(symbol).AppendChar(' ');
-		}
-		UE_LOG(LogGrid, Display, TEXT("%s"), *line);
-	}
-#endif
 }
 
 void Grid::update(const TPositionPtr* links, CellType cellType)

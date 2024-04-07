@@ -45,13 +45,20 @@ void Game::update(float deltaSeconds, const Input& input)
 		generateFood();
 	}
 
+	if (bonusTaken())
+	{
+		c_settings.gameSpeed += 0.2f;
+		dispatchEvent(GameplayEvent::BonusTaken);
+
+		generateBonus();
+	}
+
 	updateGrid();
 }
 
 void Game::updateGrid()
 {
 	m_grid->update(m_snake->links().GetHead(), CellType::Snake);
-	m_grid->printDebug();
 }
 
 bool Game::updateTime(float deltaSeconds)
@@ -113,6 +120,11 @@ bool Game::bonusTaken() const
 void Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
 {
 	m_gameplayEventCallbacks.Add(callback);
+}
+
+void SnakeGame::Game::setTimedOut() //@ TODO
+{
+	dispatchEvent(GameplayEvent::GameOver);
 }
 
 void Game::dispatchEvent(GameplayEvent Event)

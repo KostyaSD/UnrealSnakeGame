@@ -4,10 +4,12 @@
 #include "UI/SG_GameplayWidget.h"
 #include "UI/SG_GameOverWidget.h"
 #include "Core/Game.h"
+//#include "Core/Types.h"
 
 ASG_HUD::ASG_HUD()
 {
-	PrimaryActorTick.TickInterval = 1.0f;
+	PrimaryActorTick.bCanEverTick = true;
+	// PrimaryActorTick.TickInterval = 0.1f;
 }
 
 void ASG_HUD::BeginPlay()
@@ -66,6 +68,11 @@ void ASG_HUD::SetInputKeyNames(const FString& ResetGameKeyName)
 	GameOverWidget->SetResetGameKeyName(ResetGameKeyName);
 }
 
+void ASG_HUD::SetTimerValue(float CurrentTime, float InMaxTime) 
+{
+	GameplayWidget->SetTimeFoodBar(InMaxTime - CurrentTime, InMaxTime);
+}
+
 void ASG_HUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -73,7 +80,13 @@ void ASG_HUD::Tick(float DeltaSeconds)
 	if (Game.IsValid() && GameState == EUIGameState::GameInProgress)
 	{
 		GameplayWidget->SetGameTime(Game.Pin()->gameTime());
-		UE_LOG(LogTemp, Display, TEXT("tick: %f"), GetWorld()->GetTimeSeconds());
+		// UE_LOG(LogTemp, Display, TEXT("tick: %f"), GetWorld()->GetTimeSeconds());
+		//TimeBar += DeltaSeconds;
+		//if (TimeBar >= MaxTime || Game.Pin()->gameTime() == 0)
+		//{
+		//	TimeBar = 0.0f;
+		//}
+		//GameplayWidget->SetTimeFoodBar(MaxTime - TimeBar, MaxTime);
 	}
 }
 

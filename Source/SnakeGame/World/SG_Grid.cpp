@@ -2,8 +2,6 @@
 
 #include "World/SG_Grid.h"
 #include "Core/Grid.h"
-#include "DrawDebugHelpers.h"
-#include "Components/LineBatchComponent.h"
 #include "Components/StaticMeshComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogWorldGrid, All, All);
@@ -24,7 +22,6 @@ ASG_Grid::ASG_Grid()
 void ASG_Grid::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 void ASG_Grid::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCellSize)
@@ -69,26 +66,4 @@ void ASG_Grid::UpdateColors(const FSnakeColors& Colors)
 void ASG_Grid::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// DrawGrid();
-}
-
-void ASG_Grid::DrawGrid()
-{
-	if (!GetWorld() || !GetWorld()->LineBatcher) return;
-
-	for (uint32 i = 0; i < GridDim.height + 1; ++i)
-	{
-		const FVector StartLocation = GetActorLocation() + GetActorForwardVector() * CellSize * i;
-		// DrawDebugLine(GetWorld(), StartLocation, StartLocation + GetActorRightVector() * WorldWidth, FColor::Red, false, -1.0f, 0, 2.0f);
-		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorRightVector() * WorldWidth, FLinearColor::Red, 1, 2.0f);
-	}
-
-	for (uint32 i = 0; i < GridDim.width + 1; ++i)
-	{
-		const FVector StartLocation = GetActorLocation() + GetActorRightVector() * CellSize * i;
-		// DrawDebugLine(GetWorld(), StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FColor::Red, false, -1.0f,
-		// 0, 2.0f);
-		GetWorld()->LineBatcher->DrawLine(StartLocation, StartLocation + GetActorForwardVector() * WorldHeight, FLinearColor::Red, 1, 2.0f);
-	}
-
 }

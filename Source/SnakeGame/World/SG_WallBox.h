@@ -14,6 +14,8 @@ class Grid;
 }
 
 class UStaticMeshComponent;
+class UMaterialInstanceDynamic;
+
 UCLASS()
 class SNAKEGAME_API ASG_WallBox : public AActor
 {
@@ -23,6 +25,8 @@ public:
 	ASG_WallBox();
 
 	void SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 CellSize);
+	void SetColors(UStaticMeshComponent* Mesh, const FLinearColor& Color);
+	void SetupTransform(UStaticMeshComponent* Mesh, FVector ScaleWall, FVector LocationWall);
 	void UpdateColors(const FLinearColor& Color);
 
 protected:
@@ -30,16 +34,16 @@ protected:
 	TObjectPtr<USceneComponent> Origin;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> WallLeftMesh;
+	TObjectPtr<UStaticMeshComponent> WallLeft;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> WallRightMesh;
+	TObjectPtr<UStaticMeshComponent> WallRight;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> WallUpMesh;
+	TObjectPtr<UStaticMeshComponent> WallUp;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> WallDownMesh;
+	TObjectPtr<UStaticMeshComponent> WallDown;
 
 private:
 	FLinearColor GridWallColor;

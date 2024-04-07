@@ -35,8 +35,10 @@ public:
 
 	void subscribeOnGameplayEvent(GameplayEventCallback callback);
 
+	void setTimedOut();
+
 private:
-	const Settings c_settings;
+	Settings c_settings; //const
 	TSharedPtr<Grid> m_grid;
 	TSharedPtr<Snake> m_snake;
 	TSharedPtr<Food> m_food;

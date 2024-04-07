@@ -49,8 +49,8 @@ protected:
 	float GameSpeed{1.0f};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	TSubclassOf<ASG_Grid> GridVisualClass;	
-	
+	TSubclassOf<ASG_Grid> GridVisualClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_WallBox> WallBoxVisualClass;
 
@@ -95,9 +95,11 @@ private:
 	UPROPERTY()
 	TObjectPtr<ASG_Bonus> BonusVisual;
 
-
 	UPROPERTY()
 	TObjectPtr<ASG_HUD> HUD;
+
+	float TimeBar{0.0f};
+	float MaxTime{8.0f};
 
 	UFUNCTION(Exec, Category = "Console command")
 	void NextColor();
@@ -116,6 +118,7 @@ private:
 	void OnMoveRight(const FInputActionValue& Value);
 	void OnGameReset(const FInputActionValue& Value);
 
+	void OnGameplayEvent(SnakeGame::GameplayEvent Event);
+
 	void SubscribeOnGameEvents();
 };
-

@@ -32,7 +32,7 @@ public:
 
 	void SetModel(const TSharedPtr<SnakeGame::Game>& Game);
 	void SetInputKeyNames(const FString& ResetGameKeyName);
-
+	void SetTimerValue(float CurrentTime, float InMaxTime);
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
@@ -56,6 +56,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UUserWidget> CurrentWidget;
+
+	//float TimeBar{0.0f};
+	//float MaxTime{5.0f};
 
 	TWeakPtr<SnakeGame::Game> Game;
 	EUIGameState GameState;

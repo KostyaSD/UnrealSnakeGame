@@ -26,8 +26,6 @@ public:
 
 	UE_NODISCARD bool randomEmptyPosition(Position& position) const;
 
-	void printDebug();
-
 private:
 	const Dim c_dim;
 	TArray<CellType> m_cells;

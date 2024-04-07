@@ -8,7 +8,7 @@ Snake::Snake(const Settings::Snake& settings)
 {
 	checkf(settings.defaultSize >= 4, TEXT("Snake length is too small: %i"), settings.defaultSize);
 
-	// add snake links horizontally to the left [ ----* ]
+	// add snake links horizontally to the left
 	const auto startPos = settings.startPosition;
 	for (uint32 i = 0; i < settings.defaultSize; ++i)
 	{
