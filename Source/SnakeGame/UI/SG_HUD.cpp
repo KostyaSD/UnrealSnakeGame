@@ -64,7 +64,8 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 
 void ASG_HUD::SetInputKeyNames(const FString& ResetGameKeyName)
 {
-	GameplayWidget->SetResetGameKeyName(ResetGameKeyName);
+	
+	//GameplayWidget->SetResetGameKeyName(ResetGameKeyName);
 	GameOverWidget->SetResetGameKeyName(ResetGameKeyName);
 }
 
@@ -77,17 +78,6 @@ void ASG_HUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (Game.IsValid() && GameState == EUIGameState::GameInProgress)
-	{
-		GameplayWidget->SetGameTime(Game.Pin()->gameTime());
-		// UE_LOG(LogTemp, Display, TEXT("tick: %f"), GetWorld()->GetTimeSeconds());
-		//TimeBar += DeltaSeconds;
-		//if (TimeBar >= MaxTime || Game.Pin()->gameTime() == 0)
-		//{
-		//	TimeBar = 0.0f;
-		//}
-		//GameplayWidget->SetTimeFoodBar(MaxTime - TimeBar, MaxTime);
-	}
 }
 
 void ASG_HUD::SetUIGameState(EUIGameState InGameState)

@@ -26,14 +26,27 @@ protected:
 	TObjectPtr<UTextBlock> ResetGameText;
 
 	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> CloseGameButton;
+
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> BackToMenuButton;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> NewGameButton;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> MenuLevel;
+
 
 	virtual void NativeOnInitialized() override;
 
 private:
 	UFUNCTION()
 	void OnBackToMenu();
+
+	UFUNCTION()
+	void OnCloseGame();
+
+	UFUNCTION()
+	void OnNewGame();
 };

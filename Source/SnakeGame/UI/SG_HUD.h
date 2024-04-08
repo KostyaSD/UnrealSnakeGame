@@ -57,9 +57,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<UUserWidget> CurrentWidget;
 
-	//float TimeBar{0.0f};
-	//float MaxTime{5.0f};
-
 	TWeakPtr<SnakeGame::Game> Game;
 	EUIGameState GameState;
 

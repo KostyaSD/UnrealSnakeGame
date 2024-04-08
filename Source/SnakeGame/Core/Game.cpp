@@ -23,14 +23,15 @@ Game::Game(const Settings& settings, const IPositionRandomizerPtr& randomizer) :
 	generateBonus();
 }
 
-void Game::update(float deltaSeconds, const Input& input)
+void Game::update(float deltaSeconds, const Input& input, bool timeOut)
 {
-	if (m_gameOver || !updateTime(deltaSeconds)) return;
+
+	if (m_gameOver || !updateTime(deltaSeconds) && !timeOut) return;
 
 	const auto prevTailPosition = m_snake->tail();
 	m_snake->move(input);
 
-	if (died(prevTailPosition))
+	if (timeOut || died(prevTailPosition))
 	{
 		m_gameOver = true;
 		dispatchEvent(GameplayEvent::GameOver);
@@ -63,7 +64,6 @@ void Game::updateGrid()
 
 bool Game::updateTime(float deltaSeconds)
 {
-	m_gameTime += deltaSeconds;
 	m_moveSeconds += deltaSeconds;
 	if (m_moveSeconds < c_settings.gameSpeed) return false;
 	m_moveSeconds = 0.0f;
@@ -120,11 +120,6 @@ bool Game::bonusTaken() const
 void Game::subscribeOnGameplayEvent(GameplayEventCallback callback)
 {
 	m_gameplayEventCallbacks.Add(callback);
-}
-
-void SnakeGame::Game::setTimedOut() //@ TODO
-{
-	dispatchEvent(GameplayEvent::GameOver);
 }
 
 void Game::dispatchEvent(GameplayEvent Event)

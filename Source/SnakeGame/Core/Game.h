@@ -27,18 +27,14 @@ public:
 
 	TSharedPtr<Bonus> bonus() const { return m_bonus; }
 
-	void update(float deltaSeconds, const Input& input);
+	void update(float deltaSeconds, const Input& input, bool timeOut);
 
 	uint32 score() const { return m_score; }
 
-	float gameTime() const { return m_gameTime; }
-
 	void subscribeOnGameplayEvent(GameplayEventCallback callback);
 
-	void setTimedOut();
-
 private:
-	Settings c_settings; //const
+	Settings c_settings;  // const
 	TSharedPtr<Grid> m_grid;
 	TSharedPtr<Snake> m_snake;
 	TSharedPtr<Food> m_food;
@@ -47,7 +43,6 @@ private:
 	float m_moveSeconds{0.0f};
 	bool m_gameOver{false};
 	uint32 m_score{0};
-	float m_gameTime{0.0f};
 
 	TArray<GameplayEventCallback> m_gameplayEventCallbacks;
 

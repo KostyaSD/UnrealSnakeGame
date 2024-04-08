@@ -15,14 +15,11 @@ class SNAKEGAME_API USG_GameplayWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void SetGameTime(float Seconds);
 	void SetScore(uint32 Score);
-	void SetTimeFoodBar(float CurrentTime, float InMaxTime = 5.0f);
-	void SetResetGameKeyName(const FString& ResetGameKeyName);
+	void SetTimeFoodBar(float CurrentTime, float InMaxTime);
+	//void SetResetGameKeyName(const FString& ResetGameKeyName);
 
 protected:
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UTextBlock> TimeText;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ScoreText;
@@ -30,6 +27,6 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UProgressBar> TimeFoodBar;
 
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UTextBlock> ResetGameText;
+	//UPROPERTY(meta = (BindWidget))
+	//TObjectPtr<UTextBlock> ResetGameText;
 };

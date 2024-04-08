@@ -48,6 +48,10 @@ protected:
 		Category = "Settings")
 	float GameSpeed{1.0f};
 
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "5", ClampMax = "15", EditCondition = "bOverrideUserSettings", EditConditionHides),
+		Category = "Settings")
+	float MaxTime{8.0f};
+
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;
 
@@ -82,7 +86,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<ASG_Grid> GridVisual;
 
-	//
 	UPROPERTY()
 	TObjectPtr<ASG_WallBox> WallBoxVisual;
 
@@ -99,7 +102,6 @@ private:
 	TObjectPtr<ASG_HUD> HUD;
 
 	float TimeBar{0.0f};
-	float MaxTime{8.0f};
 
 	UFUNCTION(Exec, Category = "Console command")
 	void NextColor();
@@ -117,8 +119,6 @@ private:
 	void OnMoveForward(const FInputActionValue& Value);
 	void OnMoveRight(const FInputActionValue& Value);
 	void OnGameReset(const FInputActionValue& Value);
-
-	void OnGameplayEvent(SnakeGame::GameplayEvent Event);
 
 	void SubscribeOnGameEvents();
 };

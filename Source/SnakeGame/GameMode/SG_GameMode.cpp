@@ -153,6 +153,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 	{
 		Game = MakeShared<SnakeGame::Game>(MakeSettings());
 		check(Game.IsValid());
+		TimeBar = 0.0f;
 		SubscribeOnGameEvents();
 		GridVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
@@ -169,17 +170,18 @@ void ASG_GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	if (Game.IsValid())
-	{
-		Game->update(DeltaSeconds, SnakeInput);
-	}
 	TimeBar += DeltaSeconds;
-	if (TimeBar >= MaxTime)
+	bool IsTimeOut = TimeBar >= MaxTime;
+	if (IsTimeOut)
 	{
 		TimeBar = 0.0f;
-		OnGameplayEvent(SnakeGame::GameplayEvent::GameOver);
 	}
 	HUD->SetTimerValue(TimeBar, MaxTime);
+
+	if (Game.IsValid())
+	{
+		Game->update(DeltaSeconds, SnakeInput, IsTimeOut);
+	}
 }
 
 SnakeGame::Settings ASG_GameMode::MakeSettings() const
@@ -207,33 +209,33 @@ SnakeGame::Settings ASG_GameMode::MakeSettings() const
 
 void ASG_GameMode::SubscribeOnGameEvents()
 {
-	Game->subscribeOnGameplayEvent([this](SnakeGame::GameplayEvent Event) { OnGameplayEvent(Event); });
-}
-
-void ASG_GameMode::OnGameplayEvent(SnakeGame::GameplayEvent Event)
-{
 	using namespace SnakeGame;
-	switch (Event)
-	{
-		case GameplayEvent::GameOver:
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
-			SnakeVisual->Explode();
-			FoodVisual->Hide();
-			BonusVisual->Hide();
-			WorldUtils::SetUIInput(GetWorld(), true);
-			break;
-		case GameplayEvent::GameCompleted:
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
-			break;
-		case GameplayEvent::FoodTaken:	//
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
-			FoodVisual->Explode();
-			TimeBar = 0.0f;
-			break;
-		case GameplayEvent::BonusTaken:	 //
-			UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- BONUS TAKEN --------------"));
-			break;
-	}
+
+	Game->subscribeOnGameplayEvent(
+		[&](GameplayEvent Event)
+		{
+			switch (Event)
+			{
+				case GameplayEvent::GameOver:
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+					SnakeVisual->Explode();
+					FoodVisual->Hide();
+					BonusVisual->Hide();
+					WorldUtils::SetUIInput(GetWorld(), true);
+					break;
+				case GameplayEvent::GameCompleted:
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+					break;
+				case GameplayEvent::FoodTaken:	//
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
+					FoodVisual->Explode();
+					TimeBar = 0.0f;
+					break;
+				case GameplayEvent::BonusTaken:	 //
+					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- BONUS TAKEN --------------"));
+					break;
+			};
+		});
 }

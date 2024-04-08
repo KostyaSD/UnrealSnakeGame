@@ -5,14 +5,6 @@
 #include "Components/ProgressBar.h"
 #include "World/SG_WorldUtils.h"
 
-void USG_GameplayWidget::SetGameTime(float Seconds)
-{
-	if (TimeText)
-	{
-		TimeText->SetText(SnakeGame::WorldUtils::FormatSeconds(Seconds));
-	}
-}
-
 void USG_GameplayWidget::SetScore(uint32 Score)
 {
 	if (ScoreText)
@@ -26,11 +18,11 @@ void USG_GameplayWidget::SetTimeFoodBar(float CurrentTime, float InMaxTime)
 	TimeFoodBar->SetPercent(CurrentTime / InMaxTime);
 }
 
-void USG_GameplayWidget::SetResetGameKeyName(const FString& ResetGameKeyName)
-{
-	if (ResetGameText)
-	{
-		const FString ResetGameInfo = FString::Printf(TEXT("press <%s> to reset"), *ResetGameKeyName.ToLower());
-		ResetGameText->SetText(FText::FromString(ResetGameInfo));
-	}
-}
+//void USG_GameplayWidget::SetResetGameKeyName(const FString& ResetGameKeyName)
+//{
+//	if (ResetGameText)
+//	{
+//		const FString ResetGameInfo = FString::Printf(TEXT("press <%s> to reset"), *ResetGameKeyName.ToLower());
+//		ResetGameText->SetText(FText::FromString(ResetGameInfo));
+//	}
+//}
