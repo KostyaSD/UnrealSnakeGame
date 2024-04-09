@@ -4,12 +4,10 @@
 #include "UI/SG_GameplayWidget.h"
 #include "UI/SG_GameOverWidget.h"
 #include "Core/Game.h"
-//#include "Core/Types.h"
 
 ASG_HUD::ASG_HUD()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	// PrimaryActorTick.TickInterval = 0.1f;
 }
 
 void ASG_HUD::BeginPlay()
@@ -62,14 +60,7 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 		});
 }
 
-void ASG_HUD::SetInputKeyNames(const FString& ResetGameKeyName)
-{
-	
-	//GameplayWidget->SetResetGameKeyName(ResetGameKeyName);
-	GameOverWidget->SetResetGameKeyName(ResetGameKeyName);
-}
-
-void ASG_HUD::SetTimerValue(float CurrentTime, float InMaxTime) 
+void ASG_HUD::SetTimerValue(float CurrentTime, float InMaxTime)
 {
 	GameplayWidget->SetTimeFoodBar(InMaxTime - CurrentTime, InMaxTime);
 }
@@ -77,7 +68,6 @@ void ASG_HUD::SetTimerValue(float CurrentTime, float InMaxTime)
 void ASG_HUD::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
 }
 
 void ASG_HUD::SetUIGameState(EUIGameState InGameState)

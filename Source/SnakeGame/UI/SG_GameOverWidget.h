@@ -8,6 +8,7 @@
 
 class UTextBlock;
 class UButton;
+class UWorld;
 
 UCLASS()
 class SNAKEGAME_API USG_GameOverWidget : public UUserWidget
@@ -16,14 +17,10 @@ class SNAKEGAME_API USG_GameOverWidget : public UUserWidget
 
 public:
 	void SetScore(uint32 Score);
-	void SetResetGameKeyName(const FString& ResetGameKeyName);
 
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ScoreText;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UTextBlock> ResetGameText;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> CloseGameButton;
@@ -37,16 +34,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> MenuLevel;
 
-
 	virtual void NativeOnInitialized() override;
 
 private:
+	UFUNCTION()
+	void OnStartGame();
+
 	UFUNCTION()
 	void OnBackToMenu();
 
 	UFUNCTION()
 	void OnCloseGame();
-
-	UFUNCTION()
-	void OnNewGame();
 };

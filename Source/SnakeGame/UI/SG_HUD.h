@@ -31,7 +31,6 @@ public:
 	ASG_HUD();
 
 	void SetModel(const TSharedPtr<SnakeGame::Game>& Game);
-	void SetInputKeyNames(const FString& ResetGameKeyName);
 	void SetTimerValue(float CurrentTime, float InMaxTime);
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -61,4 +60,5 @@ private:
 	EUIGameState GameState;
 
 	void SetUIGameState(EUIGameState GameState);
+
 };

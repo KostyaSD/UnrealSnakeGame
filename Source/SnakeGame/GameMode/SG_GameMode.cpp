@@ -85,8 +85,6 @@ void ASG_GameMode::StartPlay()
 	HUD = Cast<ASG_HUD>(PC->GetHUD());
 	check(HUD);
 	HUD->SetModel(Game);
-	const FString ResetGameKeyName = SnakeGame::WorldUtils::FindActionKeyName(InputMapping, ResetGameInputAction);
-	HUD->SetInputKeyNames(ResetGameKeyName);
 
 	SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
 }
@@ -124,7 +122,6 @@ void ASG_GameMode::SetupInput()
 		{
 			InputSystem->AddMappingContext(InputMapping, 0);
 		}
-
 		auto* Input = Cast<UEnhancedInputComponent>(PC->InputComponent);
 		check(Input);
 		Input->BindAction(MoveForwardInputAction, ETriggerEvent::Started, this, &ThisClass::OnMoveForward);

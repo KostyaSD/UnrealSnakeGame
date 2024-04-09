@@ -5,7 +5,6 @@
 #include "Components/Button.h"
 #include "World/SG_WorldUtils.h"
 #include "Kismet/GameplayStatics.h"
-#include "Settings/SG_GameUserSettings.h"
 
 void USG_GameOverWidget::NativeOnInitialized()
 {
@@ -13,7 +12,10 @@ void USG_GameOverWidget::NativeOnInitialized()
 
 	check(BackToMenuButton);
 	BackToMenuButton->OnClicked.AddDynamic(this, &ThisClass::OnBackToMenu);
+	check(CloseGameButton);
 	CloseGameButton->OnClicked.AddDynamic(this, &ThisClass::OnCloseGame);
+	check(NewGameButton);
+	NewGameButton->OnClicked.AddDynamic(this, &ThisClass::OnStartGame);
 }
 
 void USG_GameOverWidget::SetScore(uint32 Score)
@@ -21,15 +23,6 @@ void USG_GameOverWidget::SetScore(uint32 Score)
 	if (ScoreText)
 	{
 		ScoreText->SetText(SnakeGame::WorldUtils::FormatScore(Score));
-	}
-}
-
-void USG_GameOverWidget::SetResetGameKeyName(const FString& ResetGameKeyName)
-{
-	if (ResetGameText)
-	{
-		const FString ResetGameInfo = FString::Printf(TEXT("press <%s> to reset"), *ResetGameKeyName.ToLower());
-		ResetGameText->SetText(FText::FromString(ResetGameInfo));
 	}
 }
 
@@ -43,7 +36,7 @@ void USG_GameOverWidget::OnCloseGame()
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetOwningPlayer(), EQuitPreference::Quit, false);
 }
 
-void USG_GameOverWidget::OnNewGame()
+void USG_GameOverWidget::OnStartGame()
 {
-
+	UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetFName(), true);
 }
