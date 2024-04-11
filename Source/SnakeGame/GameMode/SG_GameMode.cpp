@@ -37,15 +37,15 @@ void ASG_GameMode::StartPlay()
 	// init world grid
 	const FTransform GridOrigin = FTransform::Identity;
 	check(GetWorld());
-	GridVisual = GetWorld()->SpawnActorDeferred<ASG_Grid>(GridVisualClass, GridOrigin);
-	check(GridVisual);
-	GridVisual->SetModel(Game->grid(), CellSize);
-	GridVisual->FinishSpawning(GridOrigin);
+	//GridVisual = GetWorld()->SpawnActorDeferred<ASG_Grid>(GridVisualClass, GridOrigin);
+	//check(GridVisual);
+	//GridVisual->SetModel(Game->grid(), CellSize);
+	//GridVisual->FinishSpawning(GridOrigin);
 
 	// init WallBox
-	WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
-	WallBoxVisual->SetModel(Game->grid(), CellSize);
-	WallBoxVisual->FinishSpawning(GridOrigin);
+	//WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
+	//WallBoxVisual->SetModel(Game->grid(), CellSize);
+	//WallBoxVisual->FinishSpawning(GridOrigin);
 
 	// init world snake
 	SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
@@ -104,9 +104,9 @@ void ASG_GameMode::UpdateColors()
 	const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
 	if (ColorSet)
 	{
-		GridVisual->UpdateColors(*ColorSet);
+		//GridVisual->UpdateColors(*ColorSet);
 		SnakeVisual->UpdateColors(*ColorSet);
-		WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
+		//WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
 		FoodVisual->UpdateColor(ColorSet->FoodColor);
 		BonusVisual->UpdateColor(ColorSet->BonusColor);
 	}
@@ -152,7 +152,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		check(Game.IsValid());
 		TimeBar = 0.0f;
 		SubscribeOnGameEvents();
-		GridVisual->SetModel(Game->grid(), CellSize);
+		//GridVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 		BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());

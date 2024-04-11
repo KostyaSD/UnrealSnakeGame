@@ -85,7 +85,10 @@ void ASG_WallBox::SetColors(UStaticMeshComponent* Mesh, const FLinearColor& Colo
 
 void ASG_WallBox::SetupTransform(UStaticMeshComponent* Mesh, FVector ScaleWall, FVector LocationWall)
 {
-	check(Mesh->GetStaticMesh());
+	if (!Mesh->GetStaticMesh())
+	{
+		return;
+	}
 	const FBox Box = Mesh->GetStaticMesh()->GetBoundingBox();
 	const auto Size = Box.GetSize();
 
