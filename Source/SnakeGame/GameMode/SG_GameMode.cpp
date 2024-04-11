@@ -37,15 +37,22 @@ void ASG_GameMode::StartPlay()
 	// init world grid
 	const FTransform GridOrigin = FTransform::Identity;
 	check(GetWorld());
-	//GridVisual = GetWorld()->SpawnActorDeferred<ASG_Grid>(GridVisualClass, GridOrigin);
-	//check(GridVisual);
-	//GridVisual->SetModel(Game->grid(), CellSize);
-	//GridVisual->FinishSpawning(GridOrigin);
+
+	if (bOverrideGrid)
+	{
+		GridVisual = GetWorld()->SpawnActorDeferred<ASG_Grid>(GridVisualClass, GridOrigin);
+		check(GridVisual);
+		GridVisual->SetModel(Game->grid(), CellSize);
+		GridVisual->FinishSpawning(GridOrigin);
+	}
 
 	// init WallBox
-	//WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
-	//WallBoxVisual->SetModel(Game->grid(), CellSize);
-	//WallBoxVisual->FinishSpawning(GridOrigin);
+	if (bOverrideWallBox)
+	{
+		WallBoxVisual = GetWorld()->SpawnActorDeferred<ASG_WallBox>(WallBoxVisualClass, GridOrigin);
+		WallBoxVisual->SetModel(Game->grid(), CellSize);
+		WallBoxVisual->FinishSpawning(GridOrigin);
+	}
 
 	// init world snake
 	SnakeVisual = GetWorld()->SpawnActorDeferred<ASG_Snake>(SnakeVisualClass, GridOrigin);
@@ -104,9 +111,9 @@ void ASG_GameMode::UpdateColors()
 	const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
 	if (ColorSet)
 	{
-		//GridVisual->UpdateColors(*ColorSet);
+		if (bOverrideGrid) GridVisual->UpdateColors(*ColorSet);
+		if (bOverrideWallBox) WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
 		SnakeVisual->UpdateColors(*ColorSet);
-		//WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
 		FoodVisual->UpdateColor(ColorSet->FoodColor);
 		BonusVisual->UpdateColor(ColorSet->BonusColor);
 	}
@@ -126,7 +133,10 @@ void ASG_GameMode::SetupInput()
 		check(Input);
 		Input->BindAction(MoveForwardInputAction, ETriggerEvent::Started, this, &ThisClass::OnMoveForward);
 		Input->BindAction(MoveRightInputAction, ETriggerEvent::Started, this, &ThisClass::OnMoveRight);
-		Input->BindAction(ResetGameInputAction, ETriggerEvent::Started, this, &ThisClass::OnGameReset);
+		if (bOverrideUserSettings)
+		{
+			Input->BindAction(ResetGameInputAction, ETriggerEvent::Started, this, &ThisClass::OnGameReset);
+		}
 	}
 }
 
@@ -152,7 +162,8 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		check(Game.IsValid());
 		TimeBar = 0.0f;
 		SubscribeOnGameEvents();
-		//GridVisual->SetModel(Game->grid(), CellSize);
+		if (bOverrideGrid) GridVisual->SetModel(Game->grid(), CellSize);
+		if (bOverrideWallBox) WallBoxVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 		BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());

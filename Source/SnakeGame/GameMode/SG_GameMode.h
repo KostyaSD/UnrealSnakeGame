@@ -30,7 +30,13 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-	bool bOverrideUserSettings{false};
+	bool bOverrideUserSettings{false};	
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	bool bOverrideGrid{false};	
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	bool bOverrideWallBox{false};
 
 	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100", EditCondition = "bOverrideUserSettings", EditConditionHides),
 		Category = "Settings")
@@ -52,10 +58,10 @@ protected:
 		Category = "Settings")
 	float MaxTime{8.0f};
 
-	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideGrid", EditConditionHides), Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideWallBox", EditConditionHides), Category = "Design")
 	TSubclassOf<ASG_WallBox> WallBoxVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
@@ -76,7 +82,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
 	TObjectPtr<UInputAction> MoveRightInputAction;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
+	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideUserSettings", EditConditionHides), Category = "SnakeInput")
 	TObjectPtr<UInputAction> ResetGameInputAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
