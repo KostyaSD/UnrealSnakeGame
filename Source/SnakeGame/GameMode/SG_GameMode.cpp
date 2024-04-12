@@ -225,24 +225,24 @@ void ASG_GameMode::SubscribeOnGameEvents()
 			switch (Event)
 			{
 				case GameplayEvent::GameOver:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME OVER --------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+					UE_LOG(LogSnakeGameMode, Display, TEXT("GAME OVER "));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("SCORE: %i "), Game->score());
 					SnakeVisual->Explode();
 					FoodVisual->Hide();
 					BonusVisual->Hide();
 					WorldUtils::SetUIInput(GetWorld(), true);
 					break;
 				case GameplayEvent::GameCompleted:
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- GAME COMPLETED --------------"));
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- SCORE: %i --------------"), Game->score());
+					UE_LOG(LogSnakeGameMode, Display, TEXT("GAME COMPLETED"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("SCORE: %i"), Game->score());
 					break;
 				case GameplayEvent::FoodTaken:	//
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- FOOD TAKEN --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("FOOD TAKEN"));
 					FoodVisual->Explode();
 					TimeBar = 0.0f;
 					break;
 				case GameplayEvent::BonusTaken:	 //
-					UE_LOG(LogSnakeGameMode, Display, TEXT("-------------- BONUS TAKEN --------------"));
+					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS TAKEN"));
 					break;
 			};
 		});

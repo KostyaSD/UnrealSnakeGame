@@ -8,6 +8,7 @@
 
 class UButton;
 class UComboBoxString;
+class UWidgetSwitcher;
 
 UCLASS()
 class SNAKEGAME_API USG_StartGameWidget : public UUserWidget
@@ -22,10 +23,19 @@ protected:
 	TObjectPtr<UButton> CloseGameButton;
 
 	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> OptionsButton;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UButton> BackOptionsButton;
+
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UComboBoxString> GameSpeedComboBox;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UComboBoxString> GridSizeComboBox;
+
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UWidgetSwitcher> WidgetSwitcher;
 
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UWorld> GameLevel;
@@ -33,11 +43,16 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 private:
+
+		int32 IndexSwitcher{0};
 	UFUNCTION()
 	void OnStartGame();
 
 	UFUNCTION()
 	void OnCloseGame();
+
+	UFUNCTION()
+	void ActiveWidgetSwitcher();
 
 	UFUNCTION()
 	void OnSelectionChanged(FString SelectedItem, ESelectInfo::Type SelectionType);

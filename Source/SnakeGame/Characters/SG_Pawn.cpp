@@ -12,11 +12,10 @@ double FOVTan(double FOVDegrees)
 
 double VerticalFOV(double HorFOVDegrees, double ViewportAspectHW)
 {
-	// https://en.m.wikipedia.org/wiki/Field_of_view_in_video_games
 	return FMath::RadiansToDegrees(2.0 * FMath::Atan(FMath::Tan(FMath::DegreesToRadians(HorFOVDegrees) * 0.5) * ViewportAspectHW));
 }
 
-constexpr double GridMargin = 10.0;
+constexpr double GridMargin = 8.5;
 
 }  // namespace
 

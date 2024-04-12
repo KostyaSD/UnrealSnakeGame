@@ -3,6 +3,7 @@
 #include "UI/SG_StartGameWidget.h"
 #include "Components/Button.h"
 #include "Components/ComboBoxString.h"
+#include "Components/WidgetSwitcher.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Settings/SG_GameUserSettings.h"
@@ -18,7 +19,13 @@ void USG_StartGameWidget::NativeOnInitialized()
 	StartGameButton->OnClicked.AddDynamic(this, &ThisClass::OnStartGame);
 
 	check(CloseGameButton);
-	CloseGameButton->OnClicked.AddDynamic(this, &ThisClass::OnCloseGame);
+	CloseGameButton->OnClicked.AddDynamic(this, &ThisClass::OnCloseGame);	
+	
+	check(OptionsButton);
+	OptionsButton->OnClicked.AddDynamic(this, &ThisClass::ActiveWidgetSwitcher);
+
+	check(BackOptionsButton);
+	BackOptionsButton->OnClicked.AddDynamic(this, &ThisClass::ActiveWidgetSwitcher);
 
 	InitComboBox(
 		GameSpeedComboBox,									 //
@@ -42,6 +49,20 @@ void USG_StartGameWidget::InitComboBox(
 	}
 	ComboBox->SetSelectedOption(CurrentOptionGetter());
 	ComboBox->OnSelectionChanged.AddDynamic(this, &ThisClass::OnSelectionChanged);
+}
+
+void USG_StartGameWidget::ActiveWidgetSwitcher()
+{
+
+	if (WidgetSwitcher->GetActiveWidgetIndex() == 0) //@todo
+	{
+		WidgetSwitcher->SetActiveWidgetIndex(++IndexSwitcher);
+	}
+	else
+	{
+		WidgetSwitcher->SetActiveWidgetIndex(--IndexSwitcher);
+	}
+	
 }
 
 void USG_StartGameWidget::OnStartGame()

@@ -37,8 +37,8 @@ struct SNAKEGAME_API Position
 
 struct SNAKEGAME_API Input
 {
-	int8 x; /* possible values: (-1, 0, 1) */
-	int8 y; /* possible values: (-1, 0, 1) */
+	int8 x;
+	int8 y;
 
 	FORCEINLINE bool opposite(const Input& rhs) const  //
 	{
