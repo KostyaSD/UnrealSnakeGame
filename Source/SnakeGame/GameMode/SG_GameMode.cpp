@@ -8,7 +8,6 @@
 #include "World/SG_WallBox.h"
 #include "World/SG_Snake.h"
 #include "World/SG_Food.h"
-#include "World/SG_Bonus.h"
 #include "World/SG_WorldTypes.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -63,11 +62,6 @@ void ASG_GameMode::StartPlay()
 	FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
 	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 	FoodVisual->FinishSpawning(GridOrigin);
-
-	// init world bonus
-	BonusVisual = GetWorld()->SpawnActorDeferred<ASG_Bonus>(BonusVisualClass, GridOrigin);
-	BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
-	BonusVisual->FinishSpawning(GridOrigin);
 
 	// set pawn location fitting grid in viewport
 	auto* PC = GetWorld()->GetFirstPlayerController();
@@ -150,7 +144,6 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		if (bOverrideWallBox) WallBoxVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
-		BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
 		HUD->SetModel(Game);
 		SnakeInput = SnakeGame::Input::Default;
 		SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
@@ -212,7 +205,6 @@ void ASG_GameMode::SubscribeOnGameEvents()
 					UE_LOG(LogSnakeGameMode, Display, TEXT("SCORE: %i "), Game->score());
 					SnakeVisual->Explode();
 					FoodVisual->Hide();
-					BonusVisual->Hide();
 					WorldUtils::SetUIInput(GetWorld(), true);
 					break;
 				case GameplayEvent::GameCompleted:
@@ -228,9 +220,6 @@ void ASG_GameMode::SubscribeOnGameEvents()
 					{
 						UE_LOG(LogSnakeGameMode, Display, TEXT("___________________BONUS______________________"));
 					}
-					break;
-				case GameplayEvent::BonusTaken:	 //
-					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS TAKEN"));
 					break;
 			};
 		});

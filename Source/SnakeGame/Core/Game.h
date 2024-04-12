@@ -12,7 +12,6 @@ namespace SnakeGame
 class Grid;
 class Snake;
 class Food;
-class Bonus;
 
 class SNAKEGAME_API Game
 {
@@ -25,8 +24,6 @@ public:
 
 	TSharedPtr<Food> food() const { return m_food; }
 
-	TSharedPtr<Bonus> bonus() const { return m_bonus; }
-
 	void update(float deltaSeconds, const Input& input, bool timeOut);
 
 	uint32 score() const { return m_score; }
@@ -38,7 +35,6 @@ private:
 	TSharedPtr<Grid> m_grid;
 	TSharedPtr<Snake> m_snake;
 	TSharedPtr<Food> m_food;
-	TSharedPtr<Bonus> m_bonus;
 
 	float m_moveSeconds{0.0f};
 	bool m_gameOver{false};
@@ -52,9 +48,6 @@ private:
 
 	void generateFood();
 	bool foodTaken() const;
-
-	void generateBonus();
-	bool bonusTaken() const;
 
 	FORCEINLINE void dispatchEvent(GameplayEvent Event);
 };

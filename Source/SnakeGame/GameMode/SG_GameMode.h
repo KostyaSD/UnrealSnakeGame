@@ -14,7 +14,6 @@ class ASG_Snake;
 class UInputAction;
 class UInputMappingContext;
 class ASG_Food;
-class ASG_Bonus;
 class ASG_HUD;
 class ASG_WallBox;
 
@@ -71,9 +70,6 @@ protected:
 	TSubclassOf<ASG_Food> FoodVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	TSubclassOf<ASG_Bonus> BonusVisualClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TObjectPtr<UDataTable> ColorsTable;
 
 	UPROPERTY(EditDefaultsOnly, Category = "SnakeInput")
@@ -100,9 +96,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ASG_Food> FoodVisual;
-
-	UPROPERTY()
-	TObjectPtr<ASG_Bonus> BonusVisual;
 
 	UPROPERTY()
 	TObjectPtr<ASG_HUD> HUD;
