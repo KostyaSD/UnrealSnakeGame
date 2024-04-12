@@ -48,10 +48,9 @@ void Game::update(float deltaSeconds, const Input& input, bool timeOut)
 
 	if (bonusTaken())
 	{
-		c_settings.gameSpeed += 0.2f;
-		dispatchEvent(GameplayEvent::BonusTaken);
+		dispatchEvent(GameplayEvent::GameOver);
 
-		generateBonus();
+		//generateBonus();
 	}
 
 	updateGrid();

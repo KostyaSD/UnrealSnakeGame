@@ -70,6 +70,7 @@ bool Grid::hitTest(const Position& position, CellType cellType) const
 
 bool Grid::randomEmptyPosition(Position& position) const
 {
+
 	return m_positionRandomizer->generatePosition(c_dim, m_cells, position);
 }
 

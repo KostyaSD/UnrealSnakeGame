@@ -25,9 +25,7 @@ public:
 	ASG_WallBox();
 
 	void SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 CellSize);
-	void SetColors(UStaticMeshComponent* Mesh, const FLinearColor& Color);
 	void SetupTransform(UStaticMeshComponent* Mesh, FVector ScaleWall, FVector LocationWall);
-	void UpdateColors(const FLinearColor& Color);
 
 protected:
 	UPROPERTY(VisibleAnywhere)

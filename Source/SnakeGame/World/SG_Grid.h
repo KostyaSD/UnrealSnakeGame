@@ -26,8 +26,6 @@ public:
 
 	void SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 CellSize);
 
-	void UpdateColors(const FSnakeColors& Colors);
-
 protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USceneComponent> Origin;

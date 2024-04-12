@@ -100,14 +100,7 @@ void ASG_GameMode::UpdateColors()
 {
 	const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
 	const auto* ColorSet = ColorsTable->FindRow<FSnakeColors>(RowName, {});
-	if (ColorSet)
-	{
-		if (bOverrideGrid) GridVisual->UpdateColors(*ColorSet);
-		if (bOverrideWallBox) WallBoxVisual->UpdateColors(ColorSet->GridWallColor);
-		SnakeVisual->UpdateColors(*ColorSet);
-		FoodVisual->UpdateColor(ColorSet->FoodColor);
-		BonusVisual->UpdateColor(ColorSet->BonusColor);
-	}
+	if (ColorSet) SnakeVisual->UpdateColors(*ColorSet);
 }
 
 void ASG_GameMode::SetupInput()

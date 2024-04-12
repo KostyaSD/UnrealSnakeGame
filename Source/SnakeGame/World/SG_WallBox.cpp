@@ -66,23 +66,6 @@ void ASG_WallBox::SetModel(const TSharedPtr<SnakeGame::Grid>& Grid, uint32 InCel
 	);
 }
 
-void ASG_WallBox::UpdateColors(const FLinearColor& Color)
-{
-	GridWallColor = Color;
-	SetColors(WallLeft, Color);
-	SetColors(WallRight, Color);
-	SetColors(WallUp, Color);
-	SetColors(WallDown, Color);
-}
-
-void ASG_WallBox::SetColors(UStaticMeshComponent* Mesh, const FLinearColor& Color)
-{
-	if (auto* Materia = Mesh->CreateAndSetMaterialInstanceDynamic(0))
-	{
-		Materia->SetVectorParameterValue("Color", Color);
-	}
-}
-
 void ASG_WallBox::SetupTransform(UStaticMeshComponent* Mesh, FVector ScaleWall, FVector LocationWall)
 {
 	if (!Mesh->GetStaticMesh())
