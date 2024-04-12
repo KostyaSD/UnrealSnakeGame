@@ -30,11 +30,11 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Settings")
-	bool bOverrideUserSettings{false};	
-	
+	bool bOverrideUserSettings{false};
+
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	bool bOverrideGrid{false};	
-	
+	bool bOverrideGrid{false};
+
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	bool bOverrideWallBox{false};
 
@@ -56,7 +56,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "5", ClampMax = "15", EditCondition = "bOverrideUserSettings", EditConditionHides),
 		Category = "Settings")
-	float MaxTime{8.0f};
+	int32 MaxTime{8};
 
 	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideGrid", EditConditionHides), Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;
@@ -108,9 +108,6 @@ private:
 	TObjectPtr<ASG_HUD> HUD;
 
 	float TimeBar{0.0f};
-
-	UFUNCTION(Exec, Category = "Console command")
-	void NextColor();
 
 private:
 	TSharedPtr<SnakeGame::Game> Game;

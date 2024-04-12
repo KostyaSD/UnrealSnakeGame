@@ -96,15 +96,6 @@ void ASG_GameMode::StartPlay()
 	SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
 }
 
-void ASG_GameMode::NextColor()
-{
-	if (ColorsTable)
-	{
-		ColorTableIndex = (ColorTableIndex + 1) % ColorsTable->GetRowNames().Num();
-		UpdateColors();
-	}
-}
-
 void ASG_GameMode::UpdateColors()
 {
 	const auto RowName = ColorsTable->GetRowNames()[ColorTableIndex];
@@ -169,7 +160,6 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
 		HUD->SetModel(Game);
 		SnakeInput = SnakeGame::Input::Default;
-		NextColor();
 		SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
 	}
 }
@@ -240,6 +230,11 @@ void ASG_GameMode::SubscribeOnGameEvents()
 					UE_LOG(LogSnakeGameMode, Display, TEXT("FOOD TAKEN"));
 					FoodVisual->Explode();
 					TimeBar = 0.0f;
+					MaxTime += 1;
+					if (MaxTime % 5 == 0)
+					{
+						UE_LOG(LogSnakeGameMode, Display, TEXT("___________________BONUS______________________"));
+					}
 					break;
 				case GameplayEvent::BonusTaken:	 //
 					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS TAKEN"));
