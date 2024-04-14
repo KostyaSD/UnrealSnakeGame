@@ -6,6 +6,8 @@
 #include "World/SG_WorldUtils.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 ASG_Food::ASG_Food()
 {
@@ -18,6 +20,7 @@ ASG_Food::ASG_Food()
 	FoodMesh = CreateDefaultSubobject<UStaticMeshComponent>("FoodMesh");
 	check(FoodMesh);
 	FoodMesh->SetupAttachment(Origin);
+	
 }
 
 void ASG_Food::SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCellSize, const SnakeGame::Dim& InDims)
@@ -25,7 +28,6 @@ void ASG_Food::SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCell
 	Food = InFood;
 	CellSize = InCellSize;
 	Dims = InDims;
-
 	SnakeGame::WorldUtils::ScaleMesh(FoodMesh, 0.8 * FVector(CellSize));
 
 	SetActorHiddenInGame(false);
@@ -49,6 +51,7 @@ void ASG_Food::Tick(float DeltaTime)
 
 void ASG_Food::Explode()
 {
+	UGameplayStatics::SpawnSoundAtLocation(this, SoundClassObject, GetActorLocation());
 	if (UNiagaraComponent* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetFoodWorldLocation()))
 	{
 		NS->SetVariableLinearColor("SnakeColor", FoodColor);

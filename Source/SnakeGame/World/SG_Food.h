@@ -1,4 +1,4 @@
-	// Snake Game, Copyright GamesWID. All Rights Reserved.
+// Snake Game, Copyright GamesWID. All Rights Reserved.
 
 #pragma once
 
@@ -15,6 +15,7 @@ class Food;
 
 class UStaticMeshComponent;
 class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class SNAKEGAME_API ASG_Food : public AActor
@@ -38,8 +39,11 @@ protected:
 	TObjectPtr<USceneComponent> Origin;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> FoodMesh;	
-	
+	TObjectPtr<UStaticMeshComponent> FoodMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	TObjectPtr<USoundBase> SoundClassObject;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 

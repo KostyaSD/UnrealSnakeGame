@@ -15,6 +15,7 @@ class Bonus;
 
 class UStaticMeshComponent;
 class UNiagaraSystem;
+class USoundBase;
 
 UCLASS()
 class SNAKEGAME_API ASG_Bonus : public AActor
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UStaticMeshComponent> BonusMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+	TObjectPtr<USoundBase> SoundClassObject;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;

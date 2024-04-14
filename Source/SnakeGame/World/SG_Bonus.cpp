@@ -7,6 +7,8 @@
 #include "World/SG_WorldUtils.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 ASG_Bonus::ASG_Bonus()
 {
@@ -50,6 +52,9 @@ void ASG_Bonus::Tick(float DeltaTime)
 
 void ASG_Bonus::Explode()
 {
+
+	UGameplayStatics::SpawnSoundAtLocation(this, SoundClassObject, GetActorLocation());
+
 	if (UNiagaraComponent* NS = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), ExplosionEffect, GetBonusWorldLocation()))
 	{
 		NS->SetVariableLinearColor("SnakeColor", BonusColor);
