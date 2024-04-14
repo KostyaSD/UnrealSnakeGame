@@ -14,6 +14,7 @@ class ASG_Snake;
 class UInputAction;
 class UInputMappingContext;
 class ASG_Food;
+class ASG_Bonus;
 class ASG_HUD;
 class ASG_WallBox;
 
@@ -53,9 +54,9 @@ protected:
 		Category = "Settings")
 	float GameSpeed{1.0f};
 
-	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "5", ClampMax = "15", EditCondition = "bOverrideUserSettings", EditConditionHides),
+	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "5", ClampMax = "25", EditCondition = "bOverrideUserSettings", EditConditionHides),
 		Category = "Settings")
-	int32 MaxTime{8};
+	int32 MaxTime{15};
 
 	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideGrid", EditConditionHides), Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;
@@ -67,7 +68,10 @@ protected:
 	TSubclassOf<ASG_Snake> SnakeVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	TSubclassOf<ASG_Food> FoodVisualClass;
+	TSubclassOf<ASG_Food> FoodVisualClass;	
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Design")
+	TSubclassOf<ASG_Bonus> BonusVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TObjectPtr<UDataTable> ColorsTable;
@@ -98,16 +102,20 @@ private:
 	TObjectPtr<ASG_Food> FoodVisual;
 
 	UPROPERTY()
+	TObjectPtr<ASG_Bonus> BonusVisual;
+
+	UPROPERTY()
 	TObjectPtr<ASG_HUD> HUD;
 
 	float TimeBar{0.0f};
 
 private:
+	bool IsNgOut = true;
 	TSharedPtr<SnakeGame::Game> Game;
 	uint32 ColorTableIndex{0};
 	SnakeGame::Input SnakeInput{SnakeGame::Input::Default};
 
-	SnakeGame::Settings MakeSettings() const;
+	SnakeGame::Settings MakeSettings();
 
 	void UpdateColors();
 

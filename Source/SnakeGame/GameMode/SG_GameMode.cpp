@@ -8,6 +8,7 @@
 #include "World/SG_WallBox.h"
 #include "World/SG_Snake.h"
 #include "World/SG_Food.h"
+#include "World/SG_Bonus.h"
 #include "World/SG_WorldTypes.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -62,6 +63,13 @@ void ASG_GameMode::StartPlay()
 	FoodVisual = GetWorld()->SpawnActorDeferred<ASG_Food>(FoodVisualClass, GridOrigin);
 	FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
 	FoodVisual->FinishSpawning(GridOrigin);
+
+	// init world bonus
+	BonusVisual = GetWorld()->SpawnActorDeferred<ASG_Bonus>(BonusVisualClass, GridOrigin);
+	BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
+	BonusVisual->Hide(true);
+	IsNgOut = false;
+	BonusVisual->FinishSpawning(GridOrigin);
 
 	// set pawn location fitting grid in viewport
 	auto* PC = GetWorld()->GetFirstPlayerController();
@@ -144,6 +152,7 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 		if (bOverrideWallBox) WallBoxVisual->SetModel(Game->grid(), CellSize);
 		SnakeVisual->SetModel(Game->snake(), CellSize, Game->grid()->dim());
 		FoodVisual->SetModel(Game->food(), CellSize, Game->grid()->dim());
+		BonusVisual->SetModel(Game->bonus(), CellSize, Game->grid()->dim());
 		HUD->SetModel(Game);
 		SnakeInput = SnakeGame::Input::Default;
 		SnakeGame::WorldUtils::SetUIInput(GetWorld(), false);
@@ -153,7 +162,10 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 void ASG_GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
+	if (IsNgOut)
+	{
+		BonusVisual->Explode();
+	}
 	TimeBar += DeltaSeconds;
 	bool IsTimeOut = TimeBar >= MaxTime;
 	if (IsTimeOut)
@@ -168,10 +180,9 @@ void ASG_GameMode::Tick(float DeltaSeconds)
 	}
 }
 
-SnakeGame::Settings ASG_GameMode::MakeSettings() const
+SnakeGame::Settings ASG_GameMode::MakeSettings()
 {
 	SnakeGame::Settings GS;
-
 #if WITH_EDITOR
 	if (bOverrideUserSettings)
 	{
@@ -205,21 +216,42 @@ void ASG_GameMode::SubscribeOnGameEvents()
 					UE_LOG(LogSnakeGameMode, Display, TEXT("SCORE: %i "), Game->score());
 					SnakeVisual->Explode();
 					FoodVisual->Hide();
+					BonusVisual->Hide(true);
+					IsNgOut = false;
 					WorldUtils::SetUIInput(GetWorld(), true);
 					break;
 				case GameplayEvent::GameCompleted:
 					UE_LOG(LogSnakeGameMode, Display, TEXT("GAME COMPLETED"));
 					UE_LOG(LogSnakeGameMode, Display, TEXT("SCORE: %i"), Game->score());
+					FoodVisual->Hide();
+					BonusVisual->Hide(true);
+					IsNgOut = false;
+					WorldUtils::SetUIInput(GetWorld(), true);
 					break;
 				case GameplayEvent::FoodTaken:	//
 					UE_LOG(LogSnakeGameMode, Display, TEXT("FOOD TAKEN"));
 					FoodVisual->Explode();
 					TimeBar = 0.0f;
-					MaxTime += 1;
-					if (MaxTime % 5 == 0)
+					++MaxTime;
+					if (Game->score() % 5 == 0)
 					{
-						UE_LOG(LogSnakeGameMode, Display, TEXT("___________________BONUS______________________"));
+						IsNgOut = true;
+						BonusVisual->Hide(false);
 					}
+
+					UE_LOG(LogSnakeGameMode, Display, TEXT("MaxTime: %i"), MaxTime);
+					break;
+				case GameplayEvent::BonusSpeed:	 //
+					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS SPEED: %f"), GameSpeed);
+					break;
+				case GameplayEvent::SlowSpeed:	//
+					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS SlowSpeed"));
+					break;
+				case GameplayEvent::BonusTaken:	 //
+					BonusVisual->Hide(true);
+					IsNgOut = false;
+					TimeBar = 0.0f;
+					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS Taken"));
 					break;
 			};
 		});

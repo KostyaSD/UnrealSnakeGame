@@ -3,6 +3,7 @@
 #include "UI/SG_HUD.h"
 #include "UI/SG_GameplayWidget.h"
 #include "UI/SG_GameOverWidget.h"
+#include "UI/SG_GameCompletedWidget.h"
 #include "Core/Game.h"
 
 ASG_HUD::ASG_HUD()
@@ -16,7 +17,11 @@ void ASG_HUD::BeginPlay()
 
 	GameplayWidget = CreateWidget<USG_GameplayWidget>(GetWorld(), GameplayWidgetClass);
 	check(GameplayWidget);
-	GameWidgets.Add(EUIGameState::GameInProgress, GameplayWidget);
+	GameWidgets.Add(EUIGameState::GameInProgress, GameplayWidget);	
+	
+	GameCompletedWidget = CreateWidget<USG_GameCompletedWidget>(GetWorld(), GameCompletedWidgetClass);
+	check(GameCompletedWidget);
+	GameWidgets.Add(EUIGameState::GameCompleted, GameCompletedWidget);
 
 	GameOverWidget = CreateWidget<USG_GameOverWidget>(GetWorld(), GameOverWidgetClass);
 	check(GameOverWidget);
@@ -49,9 +54,20 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 			{
 				case GameplayEvent::FoodTaken:	//
 					GameplayWidget->SetScore(InGame->score());
+					break;				
+				case GameplayEvent::BonusTaken:	//
+					GameplayWidget->SetScore(InGame->score());
 					break;
-
-				case GameplayEvent::GameCompleted: [[fallthrough]];
+				case GameplayEvent::BonusSpeed:	 //
+					GameplayWidget->SetSpeed(InGame->speed());
+					break;
+				case GameplayEvent::SlowSpeed:  //
+					GameplayWidget->SetSpeed(InGame->speed());
+					break;
+				case GameplayEvent::GameCompleted: //
+					GameCompletedWidget->SetScore(InGame->score());
+					SetUIGameState(EUIGameState::GameCompleted);
+					break;
 				case GameplayEvent::GameOver:  //
 					GameOverWidget->SetScore(InGame->score());
 					SetUIGameState(EUIGameState::GameOver);
@@ -86,6 +102,8 @@ void ASG_HUD::SetUIGameState(EUIGameState InGameState)
 	if (InGameState == EUIGameState::GameInProgress && Game.IsValid())
 	{
 		GameplayWidget->SetScore(Game.Pin()->score());
+		GameplayWidget->SetSpeed(Game.Pin()->speed());
+		GameCompletedWidget->SetScore(Game.Pin()->score());
 		GameOverWidget->SetScore(Game.Pin()->score());
 	}
 

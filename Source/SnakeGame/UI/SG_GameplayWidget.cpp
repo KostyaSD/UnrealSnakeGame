@@ -13,6 +13,14 @@ void USG_GameplayWidget::SetScore(uint32 Score)
 	}
 }
 
+void USG_GameplayWidget::SetSpeed(float Speed)
+{
+	if (SpeedText)
+	{
+		SpeedText->SetText(SnakeGame::WorldUtils::FormatSpeed(Speed));
+	}
+}
+
 void USG_GameplayWidget::SetTimeFoodBar(float CurrentTime, float InMaxTime)
 {
 	TimeFoodBar->SetPercent(CurrentTime / InMaxTime);

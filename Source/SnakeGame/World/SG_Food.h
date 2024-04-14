@@ -1,4 +1,4 @@
-// Snake Game, Copyright GamesWID. All Rights Reserved.
+	// Snake Game, Copyright GamesWID. All Rights Reserved.
 
 #pragma once
 
@@ -38,8 +38,8 @@ protected:
 	TObjectPtr<USceneComponent> Origin;
 
 	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> FoodMesh;
-
+	TObjectPtr<UStaticMeshComponent> FoodMesh;	
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
 	TObjectPtr<UNiagaraSystem> ExplosionEffect;
 

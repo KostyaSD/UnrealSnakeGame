@@ -15,7 +15,7 @@ double VerticalFOV(double HorFOVDegrees, double ViewportAspectHW)
 	return FMath::RadiansToDegrees(2.0 * FMath::Atan(FMath::Tan(FMath::DegreesToRadians(HorFOVDegrees) * 0.5) * ViewportAspectHW));
 }
 
-constexpr double GridMargin = 8.5;
+constexpr double GridMargin = 10.0;
 
 }  // namespace
 

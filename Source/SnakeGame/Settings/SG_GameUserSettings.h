@@ -54,7 +54,7 @@ private:
 
 	const TMap<EGameSpeed, FSpeedData> GameSpeeds  //
 		{
-			{EGameSpeed::Easy, {"Easy", 0.3f}},	  //
+			{EGameSpeed::Easy, {"Easy", 0.45f}},	  //
 			{EGameSpeed::Medium, {"Medium", 0.15f}},  //
 			{EGameSpeed::Hard, {"Hard", 0.07f}},	  //
 		};

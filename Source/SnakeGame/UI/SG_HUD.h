@@ -7,6 +7,7 @@
 #include "SG_HUD.generated.h"
 
 class USG_GameplayWidget;
+class USG_GameCompletedWidget;
 class USG_GameOverWidget;
 
 UENUM()
@@ -39,13 +40,19 @@ protected:
 	TSubclassOf<USG_GameplayWidget> GameplayWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<USG_GameCompletedWidget> GameCompletedWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<USG_GameOverWidget> GameOverWidgetClass;
 
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY()
-	TObjectPtr<USG_GameplayWidget> GameplayWidget;
+	TObjectPtr<USG_GameplayWidget> GameplayWidget;	
+	
+	UPROPERTY()
+	TObjectPtr<USG_GameCompletedWidget> GameCompletedWidget;
 
 	UPROPERTY()
 	TObjectPtr<USG_GameOverWidget> GameOverWidget;
@@ -60,5 +67,4 @@ private:
 	EUIGameState GameState;
 
 	void SetUIGameState(EUIGameState GameState);
-
 };

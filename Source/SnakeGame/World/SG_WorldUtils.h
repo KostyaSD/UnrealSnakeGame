@@ -46,6 +46,12 @@ public:
 		return FText::FromString(FormattedScore);
 	}
 
+	static FText FormatSpeed(float Speed)
+	{
+		const FString FormattedSpeed = FString::Printf(TEXT("%0.1f"),10 - Speed * 10);
+		return FText::FromString(FormattedSpeed);
+	}
+
 	static FString FindActionKeyName(const TObjectPtr<UInputMappingContext>& InputMapping, const TObjectPtr<UInputAction>& Action)
 	{
 		auto* FoundAcionKeyMapping = InputMapping->GetMappings().FindByPredicate([&](const FEnhancedActionKeyMapping& Mapping)	//
