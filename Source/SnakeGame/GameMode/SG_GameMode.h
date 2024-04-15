@@ -56,7 +56,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "5", ClampMax = "25", EditCondition = "bOverrideUserSettings", EditConditionHides),
 		Category = "Settings")
-	int32 MaxTime{15};
+	int32 MaxTime{10};
 
 	UPROPERTY(EditDefaultsOnly, meta = (EditCondition = "bOverrideGrid", EditConditionHides), Category = "Design")
 	TSubclassOf<ASG_Grid> GridVisualClass;
@@ -68,8 +68,8 @@ protected:
 	TSubclassOf<ASG_Snake> SnakeVisualClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
-	TSubclassOf<ASG_Food> FoodVisualClass;	
-	
+	TSubclassOf<ASG_Food> FoodVisualClass;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Design")
 	TSubclassOf<ASG_Bonus> BonusVisualClass;
 

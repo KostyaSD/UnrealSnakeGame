@@ -46,7 +46,7 @@ void Game::update(float deltaSeconds, const Input& input, bool timeOut)
 		if (m_score % 5 == 0)
 		{
 			generateBonus();
-
+			
 		}
 	}
 
@@ -129,6 +129,7 @@ void Game::generateBonus()
 		m_bonus->setPosition(bonusPosition);
 		m_grid->update(m_bonus->position(), CellType::Bonus);
 	}
+
 }
 
 bool Game::bonusTaken() const

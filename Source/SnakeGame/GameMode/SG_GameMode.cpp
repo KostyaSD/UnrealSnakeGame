@@ -162,11 +162,14 @@ void ASG_GameMode::OnGameReset(const FInputActionValue& Value)
 void ASG_GameMode::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
 	if (IsNgOut)
 	{
 		BonusVisual->Explode();
 	}
+
 	TimeBar += DeltaSeconds;
+
 	bool IsTimeOut = TimeBar >= MaxTime;
 	if (IsTimeOut)
 	{
@@ -248,8 +251,8 @@ void ASG_GameMode::SubscribeOnGameEvents()
 					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS SlowSpeed"));
 					break;
 				case GameplayEvent::BonusTaken:	 //
-					BonusVisual->Hide(true);
 					IsNgOut = false;
+					BonusVisual->Hide(true);
 					TimeBar = 0.0f;
 					UE_LOG(LogSnakeGameMode, Display, TEXT("BONUS Taken"));
 					break;
